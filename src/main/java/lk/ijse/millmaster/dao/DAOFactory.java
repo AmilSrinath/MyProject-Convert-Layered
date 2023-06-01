@@ -1,5 +1,7 @@
 package lk.ijse.millmaster.dao;
 
+import lk.ijse.millmaster.dao.Custom.Impl.UserDAOImpl;
+
 public class DAOFactory {
     private static DAOFactory daoFactory;
 
@@ -11,21 +13,13 @@ public class DAOFactory {
     }
 
     public enum DAOTypes {
-        CUSTOMER,ITEM,ORDER,ORDER_DETAILS,QUERY_DAO
+        USER
     }
 
     public CrudDAO getDAO(DAOTypes types){
         switch (types) {
-            case CUSTOMER:
-                return new CustomerDAOImpl();
-            case ITEM:
-                return new ItemDAOImpl();
-            case ORDER:
-                return new OrderDAOImpl();
-            case ORDER_DETAILS:
-                return new OrderDetailsDAOImpl();
-            case QUERY_DAO:
-                return new QueryDAOImpl();
+            case USER:
+                return new UserDAOImpl();
             default:
                 return null;
         }
