@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="ManageUserForm" opacity="0.8" prefHeight="709.0" prefWidth="1145.0" style="-fx-background-color: #000000;" styleClass="ManagePaddyStorageForm" stylesheets="@../CSS/LoginFormCSS.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.millmaster.contoller.ManageUserFormController">
+   <children>
+      <Label layoutX="463.0" layoutY="14.0" text="Manage User" textFill="WHITE">
+         <font>
+            <Font name="Madhura" size="48.0" />
+         </font>
+      </Label>
+      <TableView fx:id="tblUser" layoutX="516.0" layoutY="261.0" onMouseClicked="#rowOnMouseClicked" prefHeight="444.0" prefWidth="626.0" stylesheets="@../CSS/LoginFormCSS.css">
+        <columns>
+          <TableColumn fx:id="colUserId" prefWidth="66.0" text="UserID" />
+          <TableColumn fx:id="colUserName" prefWidth="104.0" text="UserName" />
+            <TableColumn fx:id="colUserPassword" prefWidth="128.0" text="UserPassword" />
+            <TableColumn fx:id="colUserNic" prefWidth="142.0" text="UserNIC" />
+            <TableColumn fx:id="colUserEmail" prefWidth="185.0" text="UserEmail" />
+        </columns>
+      </TableView>
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="373.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/ManageUserForm.png" />
+         </image>
+      </ImageView>
+      <JFXTextField fx:id="txtUserID" disable="true" layoutX="204.0" layoutY="251.0" opacity="0.0" prefHeight="13.0" prefWidth="270.0" promptText="ID" styleClass="text" stylesheets="@../CSS/LoginFormCSS.css">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </JFXTextField>
+      <Label layoutX="29.0" layoutY="255.0" text="User ID               :" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <JFXTextField fx:id="txtName" layoutX="204.0" layoutY="305.0" onKeyReleased="#txtNameKeyOnReleased" prefHeight="13.0" prefWidth="270.0" promptText="Name" styleClass="text" stylesheets="@../CSS/LoginFormCSS.css">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </JFXTextField>
+      <Label layoutX="29.0" layoutY="310.0" text="User Name         :" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="29.0" layoutY="365.0" text="User Password   :" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="29.0" layoutY="420.0" text="Re-Enter            :" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <JFXTextField fx:id="txtNIC" layoutX="204.0" layoutY="468.0" onKeyReleased="#txtNICKeyOnReleased" prefHeight="13.0" prefWidth="270.0" promptText="NIC" styleClass="text" stylesheets="@../CSS/LoginFormCSS.css">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </JFXTextField>
+      <Label layoutX="29.0" layoutY="475.0" text="User NIC            :" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <JFXTextField fx:id="txtEmail" layoutX="204.0" layoutY="525.0" onKeyReleased="#txtEmailOnKeyReleased" prefHeight="13.0" prefWidth="270.0" promptText="E-mail" styleClass="text" stylesheets="@../CSS/LoginFormCSS.css">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </JFXTextField>
+      <Label layoutX="29.0" layoutY="530.0" text="User E-mail        :" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <JFXTextField fx:id="txtPassword1" layoutX="204.0" layoutY="359.0" prefHeight="13.0" prefWidth="241.0" promptText="Password" styleClass="text" stylesheets="@../CSS/LoginFormCSS.css">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </JFXTextField>
+      <JFXPasswordField fx:id="txtPassword" layoutX="204.0" layoutY="359.0" prefHeight="40.0" prefWidth="241.0" promptText="Password" styleClass="text" stylesheets="@../CSS/LoginFormCSS.css">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </JFXPasswordField>
+      <ImageView fx:id="hidePassword" fitHeight="30.0" fitWidth="34.0" layoutX="449.0" layoutY="373.0" onMousePressed="#showPasswordOnMousePresseds" onMouseReleased="#showPasswordOnMouseReleased" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/openeye.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <ImageView fx:id="hidePassword1" fitHeight="30.0" fitWidth="34.0" layoutX="449.0" layoutY="435.0" onMousePressed="#showPasswordOnMousePresseds1" onMouseReleased="#showPasswordOnMouseReleased1" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/openeye.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <JFXTextField fx:id="txtReEnterPassword1" layoutX="204.0" layoutY="414.0" prefHeight="13.0" prefWidth="241.0" promptText="Re-Enter Password" styleClass="text" stylesheets="@../CSS/LoginFormCSS.css">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </JFXTextField>
+      <JFXPasswordField fx:id="txtReEnterPassword" layoutX="204.0" layoutY="414.0" onKeyPressed="#txtReEnterPasswordOnKeyPresed" onKeyTyped="#txtReEnterPasswordOnInputMethodTextChanged" prefHeight="38.0" prefWidth="241.0" promptText="Re-Enter Password" styleClass="text" stylesheets="@../CSS/LoginFormCSS.css">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </JFXPasswordField>
+      <Button fx:id="btnSave" layoutX="371.0" layoutY="618.0" mnemonicParsing="false" onAction="#btnSaveOnAction" prefHeight="44.0" prefWidth="109.0" styleClass="AddNewUser" stylesheets="@../CSS/LoginFormCSS.css" text="Save">
+         <font>
+            <Font name="Madhura" size="20.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnDelete" layoutX="265.0" layoutY="618.0" mnemonicParsing="false" onAction="#btnDeleteOnAction" prefHeight="44.0" prefWidth="99.0" styleClass="AddNewUser" stylesheets="@../CSS/LoginFormCSS.css" text="Delete">
+         <font>
+            <Font name="Madhura" size="20.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnUpdate" layoutX="149.0" layoutY="618.0" mnemonicParsing="false" onAction="#btnUpdateOnAction" prefHeight="44.0" prefWidth="109.0" styleClass="AddNewUser" stylesheets="@../CSS/LoginFormCSS.css" text="Update">
+         <font>
+            <Font name="Madhura" size="20.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnClear" layoutX="33.0" layoutY="618.0" mnemonicParsing="false" onAction="#btnClearOnAction" prefHeight="44.0" prefWidth="109.0" styleClass="AddNewUser" stylesheets="@../CSS/LoginFormCSS.css" text="Clear">
+         <font>
+            <Font name="Madhura" size="20.0" />
+         </font>
+      </Button>
+      <VBox fx:id="SearchBarVBox" layoutX="775.0" layoutY="206.0" prefHeight="38.0" prefWidth="368.0" style="-fx-background-color: #fca404;" styleClass="SearchBarVBox" stylesheets="@../CSS/LoginFormCSS.css" />
+      <JFXTextField fx:id="txtSearchUser" focusColor="#1abc9c" layoutX="824.0" layoutY="207.0" prefHeight="35.0" prefWidth="294.0" promptText="Search" styleClass="searchBarVBox" stylesheets="@../CSS/LoginFormCSS.css" unFocusColor="#1abc9c">
+         <font>
+            <Font name="Madhura" size="17.0" />
+         </font>
+      </JFXTextField>
+      <ImageView fitHeight="33.0" fitWidth="31.0" layoutX="783.0" layoutY="210.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/search.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <Label fx:id="lblUserID" layoutX="204.0" layoutY="255.0" prefHeight="30.0" prefWidth="163.0" textFill="#ebebeb">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <Label fx:id="lblError" alignment="TOP_CENTER" layoutX="53.0" layoutY="176.0" prefHeight="60.0" prefWidth="425.0" textFill="RED">
+         <font>
+            <Font name="Madhura" size="25.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

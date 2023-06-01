@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="root1" prefHeight="605.0" prefWidth="981.0" style="-fx-background-color: #2c3e50;" stylesheets="@../CSS/LoginFormCSS.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.millmaster.contoller.LoginFormController">
+   <children>
+      <ImageView fitHeight="658.0" fitWidth="981.0" layoutX="1.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/Untitled-1.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="btnClose" fitHeight="30.0" fitWidth="36.0" layoutX="952.0" layoutY="2.0" onMouseClicked="#btnCloseOnMouseClicked" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: Hand;">
+         <image>
+            <Image url="@../image/cancel.png" />
+         </image>
+      </ImageView>
+      <VBox fx:id="UsernameVbox" layoutX="362.0" layoutY="217.0" prefHeight="40.0" prefWidth="279.0" style="-fx-background-color: #ffffff;" styleClass="UsernameVbox" stylesheets="@../CSS/LoginFormCSS.css" />
+      <Label layoutX="367.0" layoutY="136.0" text="SignIn">
+         <font>
+            <Font size="41.0" />
+         </font>
+      </Label>
+      <VBox fx:id="PasswordVbox" layoutX="361.0" layoutY="288.0" prefHeight="40.0" prefWidth="278.0" styleClass="UsernameVbox" stylesheets="@../CSS/LoginFormCSS.css" />
+      <VBox layoutX="369.0" layoutY="192.0" prefHeight="4.0" prefWidth="250.0" style="-fx-background-color: #000000;" />
+      <Label fx:id="btnForgotPass" layoutX="372.0" layoutY="433.0" onMouseClicked="#btnForgotPassOnMouseClicked" prefHeight="24.0" prefWidth="128.0" text="Forgot Password?">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <font>
+            <Font name="Segoe UI Bold" size="15.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="30.0" fitWidth="46.0" layoutX="366.0" layoutY="219.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/User.png" />
+         </image>
+      </ImageView>
+      <VBox fx:id="VBOXPassword" layoutX="363.0" layoutY="290.0" prefHeight="36.0" prefWidth="36.0" style="-fx-background-color: white;" styleClass="qwe" stylesheets="@../CSS/LoginFormCSS.css" />
+      <ImageView fitHeight="24.0" fitWidth="28.0" layoutX="368.0" layoutY="296.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/Pass.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="showPassword" fitHeight="30.0" fitWidth="34.0" layoutX="601.0" layoutY="295.0" onMousePressed="#showPasswordOnMousePresseds" onMouseReleased="#showPasswordOnMouseReleased" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/closedeye.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <JFXTextField fx:id="txtPassword1" focusColor="BLACK" layoutX="406.0" layoutY="290.0" prefHeight="36.0" prefWidth="194.0" promptText="Password" style="-fx-prompt-text-fill: #000000; -fx-text-fill: #000000;" unFocusColor="BLACK">
+         <font>
+            <Font name="Microsoft YaHei Light" size="16.0" />
+         </font>
+      </JFXTextField>
+      <JFXPasswordField fx:id="txtPassword" focusColor="BLACK" layoutX="406.0" layoutY="290.0" onAction="#txtPasswordOnAction" onKeyTyped="#txtPasswordOnKeyTyped" prefHeight="19.0" prefWidth="194.0" promptText="Password" style="-fx-prompt-text-fill: #000000; -fx-text-fill: #000000;" unFocusColor="BLACK">
+         <font>
+            <Font name="Microsoft YaHei Light" size="16.0" />
+         </font>
+      </JFXPasswordField>
+      <ComboBox fx:id="comUsername" layoutX="395.0" layoutY="219.0" prefHeight="35.0" prefWidth="243.0" promptText="Select User" style="-fx-background-color: #ffffff;" styleClass="UsernameVbox1" stylesheets="@../CSS/LoginFormCSS.css" />
+      <Button fx:id="btnSignIn" layoutX="365.0" layoutY="393.0" mnemonicParsing="false" onAction="#btnSignInOnAction" prefHeight="31.0" prefWidth="273.0" styleClass="btnSignIn" stylesheets="@../CSS/LoginFormCSS.css" text="SignIn" textFill="WHITE">
+         <font>
+            <Font size="17.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+   </children>
+</AnchorPane>

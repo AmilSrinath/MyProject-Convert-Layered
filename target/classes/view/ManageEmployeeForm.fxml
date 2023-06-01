@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="ManageEmployeeForm" opacity="0.8" prefHeight="709.0" prefWidth="1145.0" style="-fx-background-color: #000000;" styleClass="ManagePaddyStorageForm" stylesheets="@../CSS/LoginFormCSS.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.millmaster.contoller.ManageEmployeeFormController">
+   <children>
+      <Label layoutX="397.0" layoutY="16.0" text="Manage Employee" textFill="WHITE">
+         <font>
+            <Font name="Madhura" size="48.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="155.0" fitWidth="157.0" layoutX="334.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/ManageEmployeePhoto.png" />
+         </image>
+      </ImageView>
+      <TableView fx:id="tblEmployee" layoutX="516.0" layoutY="261.0" onMouseClicked="#rowOnMouseClicked" prefHeight="444.0" prefWidth="626.0" stylesheets="@../CSS/LoginFormCSS.css">
+         <columns>
+            <TableColumn fx:id="colEmpID" prefWidth="59.0" text="Emp_ID" />
+            <TableColumn fx:id="colEmpName" prefWidth="90.0" text="Emp_Name" />
+            <TableColumn fx:id="colEmpAddress" prefWidth="119.0" text="Emp_Address" />
+            <TableColumn fx:id="colEmpNIC" prefWidth="102.0" text="Emp_NIC" />
+            <TableColumn fx:id="colEmpSalary" prefWidth="103.0" text="Emp_Salary" />
+            <TableColumn fx:id="colEmpContact" prefWidth="93.0" text="Emp_Contact" />
+            <TableColumn fx:id="colUserID" prefWidth="59.0" text="UserID" />
+         </columns>
+      </TableView>
+      <JFXTextField fx:id="txtID" disable="true" layoutX="208.0" layoutY="231.0" opacity="0.0" prefHeight="13.0" prefWidth="270.0" promptText="ID" styleClass="text" stylesheets="@../CSS/LoginFormCSS.css">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </JFXTextField>
+      <Label layoutX="33.0" layoutY="235.0" text="Employee ID       :" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <JFXTextField fx:id="txtName" layoutX="208.0" layoutY="285.0" onKeyReleased="#txtNameOnKeyReleased" prefHeight="13.0" prefWidth="270.0" promptText="Name" styleClass="text" stylesheets="@../CSS/LoginFormCSS.css">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </JFXTextField>
+      <Label layoutX="33.0" layoutY="290.0" text="Employee Name :" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <VBox fx:id="SearchBarVBox" layoutX="776.0" layoutY="216.0" prefHeight="38.0" prefWidth="368.0" style="-fx-background-color: #fca404;" styleClass="SearchBarVBox" stylesheets="@../CSS/LoginFormCSS.css" />
+      <JFXTextField fx:id="txtSearchEmployee" focusColor="#1abc9c" layoutX="825.0" layoutY="217.0" prefHeight="35.0" prefWidth="294.0" promptText="Search" styleClass="searchBarVBox" stylesheets="@../CSS/LoginFormCSS.css" unFocusColor="#1abc9c">
+         <font>
+            <Font name="Madhura" size="17.0" />
+         </font>
+      </JFXTextField>
+      <ImageView fitHeight="33.0" fitWidth="31.0" layoutX="784.0" layoutY="220.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/search.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <JFXTextField fx:id="txtAddress" layoutX="208.0" layoutY="339.0" onKeyReleased="#txtAddressOnKeyReleased" prefHeight="13.0" prefWidth="270.0" promptText="Address" styleClass="text" stylesheets="@../CSS/LoginFormCSS.css">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </JFXTextField>
+      <Label layoutX="33.0" layoutY="343.0" text="Emp Address      :" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <JFXTextField fx:id="txtNIC" layoutX="208.0" layoutY="394.0" onKeyReleased="#txtNICOnKeyReleased" prefHeight="13.0" prefWidth="270.0" promptText="NIC" styleClass="text" stylesheets="@../CSS/LoginFormCSS.css">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </JFXTextField>
+      <Label layoutX="33.0" layoutY="398.0" text="Employee NIC    :" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <JFXTextField fx:id="txtSalary" layoutX="208.0" layoutY="453.0" onKeyReleased="#txtSalaryPerHourOnKeyReleased" prefHeight="13.0" prefWidth="270.0" promptText="Salary Per Hour" styleClass="text" stylesheets="@../CSS/LoginFormCSS.css">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </JFXTextField>
+      <Label layoutX="33.0" layoutY="457.0" text="Emp Salary         :" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnSave" graphicTextGap="23.0" layoutX="362.0" layoutY="599.0" mnemonicParsing="false" onAction="#btnSaveOnAction" prefHeight="44.0" prefWidth="109.0" styleClass="AddNewUser" stylesheets="@../CSS/LoginFormCSS.css" text="Save">
+         <font>
+            <Font name="Madhura" size="20.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnDelete" layoutX="256.0" layoutY="599.0" mnemonicParsing="false" onAction="#btnDeleteOnAction" prefHeight="44.0" prefWidth="99.0" styleClass="AddNewUser" stylesheets="@../CSS/LoginFormCSS.css" text="Delete">
+         <font>
+            <Font name="Madhura" size="20.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnUpdate" layoutX="140.0" layoutY="599.0" mnemonicParsing="false" onAction="#btnUpdateOnAction" prefHeight="44.0" prefWidth="109.0" styleClass="AddNewUser" stylesheets="@../CSS/LoginFormCSS.css" text="Update">
+         <font>
+            <Font name="Madhura" size="20.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnClear" layoutX="24.0" layoutY="599.0" mnemonicParsing="false" onAction="#btnClearOnAction" prefHeight="44.0" prefWidth="109.0" styleClass="AddNewUser" stylesheets="@../CSS/LoginFormCSS.css" text="Clear">
+         <font>
+            <Font name="Madhura" size="20.0" />
+         </font>
+      </Button>
+      <JFXTextField fx:id="txtContact" layoutX="208.0" layoutY="505.0" onKeyReleased="#txtContactOnKeyReleased" prefHeight="13.0" prefWidth="270.0" promptText="Contact" styleClass="text" stylesheets="@../CSS/LoginFormCSS.css">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </JFXTextField>
+      <Label layoutX="33.0" layoutY="509.0" text="Emp Contact      :" textFill="WHITE">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblUserName" layoutX="97.0" layoutY="114.0" opacity="0.0" text="Label" />
+      <Label fx:id="lblUserID" layoutX="97.0" layoutY="151.0" opacity="0.0" text="Label" />
+      <Button fx:id="btnAttendance" layoutX="24.0" layoutY="651.0" mnemonicParsing="false" onAction="#btnAttendanceOnAction" prefHeight="44.0" prefWidth="450.0" styleClass="AddNewUser" stylesheets="@../CSS/LoginFormCSS.css" text="Employee Salary">
+         <font>
+            <Font name="Madhura" size="20.0" />
+         </font>
+      </Button>
+      <Label fx:id="lblEmployeeID" layoutX="208.0" layoutY="238.0" prefHeight="30.0" prefWidth="163.0" textFill="#ebebeb">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblError" alignment="TOP_CENTER" layoutX="397.0" layoutY="172.0" prefHeight="39.0" prefWidth="450.0" textFill="RED">
+         <font>
+            <Font name="Madhura" size="31.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

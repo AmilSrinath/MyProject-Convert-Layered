@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXToggleButton?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="387.0" prefWidth="349.0" style="-fx-background-color: #ecf0f1;" styleClass="settingBox" stylesheets="@../CSS/LoginFormCSS.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.millmaster.contoller.SettingFormController">
+   <children>
+      <JFXToggleButton fx:id="btnTheme" contentDisplay="RIGHT" graphicTextGap="19.0" layoutX="13.0" layoutY="64.0" onAction="#btnThemeOnAction" prefHeight="68.0" prefWidth="323.0" size="12.0" style="-fx-border-width: 2;" styleClass="SettingThe" stylesheets="@../CSS/LoginFormCSS.css" text="Theme" toggleColor="#f1ad33" toggleLineColor="#f1ad33" unToggleColor="#27ae60" unToggleLineColor="#ecf0f1">
+         <font>
+            <Font size="20.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></JFXToggleButton>
+      <Label layoutX="13.0" layoutY="14.0" text="Settings">
+         <font>
+            <Font name="System Bold" size="21.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

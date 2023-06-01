@@ -1,0 +1,193 @@
+.V_Box{
+    -fx-border-color: #34495e;
+    -fx-border-width: 2px 2px 2px 2px;
+    -fx-border-radius: 50px;
+    -fx-background-radius: 50px;
+    -fx-border-style: solid;
+}
+
+.btnSignIn{
+    -fx-background-color: #F1AD33;
+    -fx-border-width: 2px 2px 2px 2px;
+    -fx-border-color: #000000;
+    -fx-border-radius: 50px;
+    -fx-background-radius: 50px;
+    -fx-border-style: solid;
+}
+
+.btnSignIn:hover{
+    -fx-background-color: #f4c063;
+}
+
+.UsernameVbox {
+    -fx-border-color: #000000;
+    -fx-border-radius: 50px;
+    -fx-background-radius: 50px;
+    -fx-border-width: 2px 2px 2px 2px;
+    -fx-border-style: solid;
+}
+
+.UsernameVbox1 {
+    -fx-background-radius: 20px 20px 20px 20px;
+    -fx-border-radius: 20px 20px 20px 20px;
+}
+
+
+.qwe{
+    -fx-border-radius: 50px;
+    -fx-background-radius: 50px;
+}
+
+.DashBoardSidBar{
+    -fx-background-radius: 0px 70px 0px 0px;
+}
+
+.ManagePaddyStorageForm{
+    -fx-background-radius: 70px 0px 0px 0px;
+}
+
+.UserImageVBox{
+    -fx-border-radius: 70px;
+}
+
+.SearchBarVBox{
+    -fx-background-radius: 20px 20px 20px 20px;
+    -fx-border-radius: 20px 20px 20px 20px;
+    -fx-border-width: 2px;
+    -fx-border-color:   #1ABC9C;
+    -fx-background-color:  #bdc3c7;
+}
+
+.btnManagePaddyStorage{
+    -fx-background-radius: 20px 0px 0px 20px;
+    -fx-border-radius: 20px 0px 0px 20px;
+}
+
+.btnManagePaddyStorage:hover{
+    -fx-background-color: #bdc3c7;
+    -fx-border-color: #f1c40f;
+    -fx-border-width: 0px 15px 0px 0px;
+}
+
+.Button:selected{
+    -fx-background-color: #3498db;
+}
+
+.AddNewUser{
+    -fx-background-color: #fca404;
+}
+
+.AddNewUser:hover{
+    -fx-background-color: #f5bb5f;
+}
+
+
+.ControllArea{
+    -fx-background-radius: 70px 0px 0px 0px;
+}
+
+.ManagePaddyStorageForm{
+    -fx-background-radius: 70px 0px 0px 0px;
+}
+
+.text{
+    -fx-prompt-text-fill : #7f8c8d;
+    -fx-text-fill : white;
+}
+
+.iconColor{
+    -fx-background-color: #3498db;
+}
+.TableColoum{
+    -fx-background-color: #7f8c8d;
+}
+
+.comboBox{
+    -fx-prompt-text-fill :  #7f8c8d;
+    -fx-text-fill :  #ffffffff;
+    -fx-font-size: 17px;
+}
+
+.searchBarVBox{
+    -fx-prompt-text-fill: #2c3e50;
+}
+
+.HomePageItem{
+    -fx-background-color: linear-gradient(to right,#2ecc71, #3498db);
+    -fx-background-radius: 20px 20px 20px 20px;
+    -fx-border-radius: 20px 20px 20px 20px;
+}
+.HomePageItem1{
+    -fx-background-color: #ecf0f1;
+    -fx-background-radius: 25px 25px 25px 25px;
+    -fx-border-radius: 20px 20px 20px 20px;
+}
+
+.HomePageStyle{
+    -fx-background-color: #1abc9c;
+    -fx-background-radius: 10px 10px 10px 10px;
+    -fx-border-radius: 10px 10px 10px 10px;
+}
+
+.HomePageItem1:hover{
+    -fx-background-color: #fca404;
+}
+
+.FontSize{
+    -fx-font-size: 18px;
+    -fx-prompt-text-fill : white;
+    -fx-text-fill : white;
+}
+
+.boader{
+    -fx-border-color: white;
+    -fx-border-width: 0.5px;
+    -fx-border-radius: 30px 30px 30px 30px;
+}
+
+.OTPTextBox{
+    -fx-border-width: 3px;
+}
+
+.SettingThe:hover{
+    -fx-background-color: #bdc3c7;
+    -fx-background-radius: 30px 30px 30px 30px;
+    -fx-border-radius: 30px 30px 30px 30px;
+}
+
+.SettingThe{
+    -fx-background-radius: 30px 30px 30px 30px;
+    -fx-border-radius: 30px 30px 30px 30px;
+    -fx-border-color: #fca404;
+}
+
+.SettingWindow {
+    -fx-background-color: linear-gradient(to right,#2ecc71, #3498db);
+    -fx-background-radius: 30px 30px 30px 30px;
+    -fx-border-radius: 30px 30px 30px 30px;
+}
+
+.SettingBKColor{
+    -fx-background-color:  #57606f;
+    -fx-background-radius: 30px 30px 30px 30px;
+    -fx-border-radius: 30px 30px 30px 30px;
+}
+
+.ButtonColor{
+    -fx-background-color: #DADADA;
+}
+
+.selected{
+    -fx-background-radius: 20px 0px 0px 20px;
+    -fx-border-radius: 20px 0px 0px 20px;
+}
+
+.settingBox{
+    -fx-background-radius: 30px 30px 30px 30px;
+    -fx-border-radius: 30px 30px 30px 30px;
+}
+
+.ABC{
+    -fx-background-color: white;
+    -fx-background-radius: 30px 30px 30px 30px;
+}

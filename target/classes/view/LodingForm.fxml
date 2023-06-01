@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="LodingForm" prefHeight="684.0" prefWidth="920.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.millmaster.contoller.LodingFormController">
+   <children>
+      <ImageView fx:id="imageView" fitHeight="557.0" fitWidth="768.0" layoutX="58.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+      <ProgressBar cache="true" layoutX="242.0" layoutY="417.0" prefHeight="13.0" prefWidth="172.0" />
+   </children>
+</AnchorPane>

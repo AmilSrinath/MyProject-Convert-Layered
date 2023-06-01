@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXTextField?>
+<?import java.lang.String?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="root2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="816.0" prefWidth="1446.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.millmaster.contoller.HomeFormController">
+   <children>
+      <ImageView fx:id="BackgroundImg" fitHeight="816.0" fitWidth="1560.0" opacity="0.64" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/DashboardPhoto.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgMillmaster" fitHeight="709.0" fitWidth="771.0" layoutX="504.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/MillmasterLOGO.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="btnClose" fitHeight="29.0" fitWidth="31.0" layoutX="1408.0" layoutY="7.0" onMouseClicked="#btnCloseOnMouseClicked" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/cancel.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <AnchorPane fx:id="DashBoardSidBar" layoutY="109.0" opacity="0.37" prefHeight="709.0" prefWidth="299.0" style="-fx-background-color: #000000;" styleClass="DashBoardSidBar" stylesheets="@../CSS/LoginFormCSS.css" />
+      <VBox fx:id="SearchBarVBox1" layoutX="1179.0" layoutY="38.0" prefHeight="38.0" prefWidth="205.0" styleClass="SearchBarVBox" stylesheets="@../CSS/LoginFormCSS.css" />
+      <ImageView fitHeight="67.0" fitWidth="76.0" layoutX="23.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/User.png" />
+         </image>
+      </ImageView>
+      <VBox fx:id="UserImageVBox" layoutX="20.0" layoutY="14.0" opacity="0.34" prefHeight="73.0" prefWidth="74.0" style="-fx-background-color: #000000; -fx-border-radius: 100em; -fx-background-radius: 100em;" />
+      <Label fx:id="lblUserName" layoutX="108.0" layoutY="36.0">
+         <font>
+            <Font name="Madhura" size="23.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="230.0" fitWidth="290.0" layoutX="34.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/MillmasterLOGO.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="btnMassage" fitHeight="46.0" fitWidth="36.0" layoutX="1191.0" layoutY="40.0" onMouseClicked="#btnMassageOnMouseClicked" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/bell.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <ImageView fitHeight="46.0" fitWidth="35.0" layoutX="1267.0" layoutY="40.0" onMouseClicked="#SettingOnMouseClicked" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/settings.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <VBox fx:id="SearchBarVBox" layoutX="784.0" layoutY="38.0" prefHeight="38.0" prefWidth="368.0" styleClass="SearchBarVBox" stylesheets="@../CSS/LoginFormCSS.css" />
+      <Label fx:id="lblWelCome" alignment="BOTTOM_CENTER" graphicTextGap="100.0" layoutX="497.0" layoutY="656.0" prefHeight="99.0" prefWidth="760.0" text="Welcome Millmaster" textFill="WHITE">
+         <font>
+            <Font name="Madhura" size="71.0" />
+         </font>
+      </Label>
+      <JFXTextField fx:id="SearchBar" focusColor="#1abc9c" layoutX="840.0" layoutY="39.0" prefHeight="35.0" prefWidth="282.0" promptText="Search" unFocusColor="#1aba9a">
+         <font>
+            <Font name="Madhura" size="15.0" />
+         </font>
+      </JFXTextField>
+      <ImageView fitHeight="33.0" fitWidth="31.0" layoutX="792.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/search.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <Label fx:id="lblDate" layoutX="420.0" layoutY="36.0">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </Label>
+      <StackPane fx:id="ControllArea" layoutX="299.0" layoutY="109.0" prefHeight="709.0" prefWidth="1145.0" styleClass="ControllArea" stylesheets="@../CSS/LoginFormCSS.css" />
+      <Button fx:id="btnManageOrder" graphicTextGap="110.0" layoutX="1.0" layoutY="414.0" mnemonicParsing="false" onAction="#btnManageOrderOnAction" prefHeight="51.0" prefWidth="298.0" stylesheets="@../CSS/LoginFormCSS.css" text="Manage Order">
+         <styleClass>
+            <String fx:value="btnManagePaddyStorage" />
+            <String fx:value="Button" />
+            <String fx:value="ButtonColor" />
+         </styleClass>
+         <graphic>
+            <ImageView fitHeight="34.0" fitWidth="71.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/order.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <font>
+            <Font name="Madhura" size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnManagePaddyStorage" graphicTextGap="50.0" layoutX="1.0" layoutY="362.0" mnemonicParsing="false" onAction="#btnManagePaddyStorageOnAction" prefHeight="51.0" prefWidth="298.0" stylesheets="@../CSS/LoginFormCSS.css" text="Manage Paddy Storage">
+         <styleClass>
+            <String fx:value="btnManagePaddyStorage" />
+            <String fx:value="Button" />
+            <String fx:value="ButtonColor" />
+         </styleClass>
+         <graphic>
+            <ImageView fitHeight="34.0" fitWidth="71.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/store.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <font>
+            <Font name="Madhura" size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnManageEmployee" graphicTextGap="80.0" layoutX="1.0" layoutY="466.0" mnemonicParsing="false" onAction="#btnManageEmployeeOnAction" prefHeight="51.0" prefWidth="298.0" stylesheets="@../CSS/LoginFormCSS.css" text="Manage Employee">
+         <styleClass>
+            <String fx:value="btnManagePaddyStorage" />
+            <String fx:value="Button" />
+            <String fx:value="ButtonColor" />
+         </styleClass>
+         <graphic>
+            <ImageView fitHeight="34.0" fitWidth="71.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/employer.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <font>
+            <Font name="Madhura" size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnManageSupplier" graphicTextGap="94.0" layoutX="1.0" layoutY="518.0" mnemonicParsing="false" onAction="#btnManageSupplierOnAction" prefHeight="51.0" prefWidth="298.0" stylesheets="@../CSS/LoginFormCSS.css" text="Manage Supplier">
+         <styleClass>
+            <String fx:value="btnManagePaddyStorage" />
+            <String fx:value="Button" />
+            <String fx:value="ButtonColor" />
+         </styleClass>
+         <graphic>
+            <ImageView fitHeight="34.0" fitWidth="71.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/supplier.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <font>
+            <Font name="Madhura" size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnManageBuyer" graphicTextGap="111.0" layoutX="1.0" layoutY="570.0" mnemonicParsing="false" onAction="#btnManageBuyerOnAction" prefHeight="51.0" prefWidth="298.0" stylesheets="@../CSS/LoginFormCSS.css" text="Manage Buyer">
+         <styleClass>
+            <String fx:value="btnManagePaddyStorage" />
+            <String fx:value="Button" />
+            <String fx:value="ButtonColor" />
+         </styleClass>
+         <graphic>
+            <ImageView fitHeight="34.0" fitWidth="71.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/buyer.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <font>
+            <Font name="Madhura" size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnManageAssest" graphicTextGap="100.0" layoutX="1.0" layoutY="622.0" mnemonicParsing="false" onAction="#btnManageAssestOnAction" prefHeight="51.0" prefWidth="298.0" stylesheets="@../CSS/LoginFormCSS.css" text="Manage Assest">
+         <styleClass>
+            <String fx:value="btnManagePaddyStorage" />
+            <String fx:value="Button" />
+            <String fx:value="ButtonColor" />
+         </styleClass>
+         <graphic>
+            <ImageView fitHeight="34.0" fitWidth="71.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/Assest.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <font>
+            <Font name="Madhura" size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnDashboard" graphicTextGap="165.0" layoutX="1.0" layoutY="310.0" mnemonicParsing="false" onAction="#btnDashboardOnAction" prefHeight="51.0" prefWidth="298.0" stylesheets="@../CSS/LoginFormCSS.css" text="Home">
+         <styleClass>
+            <String fx:value="btnManagePaddyStorage" />
+            <String fx:value="Button" />
+            <String fx:value="ButtonColor" />
+         </styleClass>
+         <graphic>
+            <ImageView fitHeight="34.0" fitWidth="71.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/dashboard.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <font>
+            <Font name="Madhura" size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnManageUser" graphicTextGap="115.0" layoutX="1.0" layoutY="674.0" mnemonicParsing="false" onAction="#btnManageUserOnAction" prefHeight="51.0" prefWidth="298.0" stylesheets="@../CSS/LoginFormCSS.css" text="Manage User">
+         <styleClass>
+            <String fx:value="btnManagePaddyStorage" />
+            <String fx:value="Button" />
+            <String fx:value="ButtonColor" />
+         </styleClass>
+         <graphic>
+            <ImageView fitHeight="34.0" fitWidth="71.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/userImage.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <font>
+            <Font name="Madhura" size="15.0" />
+         </font>
+      </Button>
+      <ImageView fx:id="btnLogOut" fitHeight="40.0" fitWidth="43.0" layoutX="1337.0" layoutY="36.0" onMouseClicked="#btnLogOutOnMouseCliced" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/logout.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <Label fx:id="lblTime" layoutX="605.0" layoutY="36.0">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnManageProduct" graphicTextGap="85.0" layoutX="1.0" layoutY="726.0" mnemonicParsing="false" onAction="#btnManageProductOnAction" prefHeight="51.0" prefWidth="298.0" stylesheets="@../CSS/LoginFormCSS.css" text="Manage Product">
+         <styleClass>
+            <String fx:value="btnManagePaddyStorage" />
+            <String fx:value="Button" />
+            <String fx:value="ButtonColor" />
+         </styleClass>
+         <graphic>
+            <ImageView fitHeight="34.0" fitWidth="71.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/ManageProduct.png" />
+               </image>
+            </ImageView>
+         </graphic>
+         <font>
+            <Font name="Madhura" size="15.0" />
+         </font>
+      </Button>
+      <ImageView fitHeight="82.0" fitWidth="80.0" layoutX="17.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/boy.png" />
+         </image>
+      </ImageView>
+      <StackPane fx:id="NotificationControllArea" layoutX="999.0" layoutY="82.0" onMouseExited="#NotificationControllAreaOnMouseExited" prefHeight="254.0" prefWidth="349.0" />
+      <StackPane fx:id="SettingControllArea" layoutX="1059.0" layoutY="82.0" onMouseExited="#SettingControllAreaOnMouseExited" prefHeight="387.0" prefWidth="349.0" />
+      <ImageView fx:id="btnSettingWhite" fitHeight="46.0" fitWidth="35.0" layoutX="1267.0" layoutY="40.0" onMouseClicked="#SettingOnMouseClicked" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/settingsWhite.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <ImageView fx:id="btnMassageWhite" fitHeight="46.0" fitWidth="36.0" layoutX="1191.0" layoutY="40.0" onMouseClicked="#btnMassageOnMouseClicked" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/bellWhite.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <ImageView fx:id="btnLogOutWhite" fitHeight="40.0" fitWidth="43.0" layoutX="1337.0" layoutY="36.0" onMouseClicked="#btnLogOutOnMouseCliced" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/logoutWhite.png" />
+         </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <AnchorPane layoutX="1209.0" layoutY="37.0" prefHeight="18.0" prefWidth="19.0" styleClass="HomePageItem" stylesheets="@../CSS/LoginFormCSS.css">
+         <children>
+            <Label fx:id="lblActiveOrders" alignment="TOP_CENTER" layoutX="2.0" layoutY="1.0" prefHeight="16.0" prefWidth="15.0" text="0" textFill="WHITE">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <StackPane fx:id="ModeControllArea" layoutX="501.0" layoutY="168.0" prefHeight="454.0" prefWidth="878.0">
+         <children>
+            <Label fx:id="lblMode" alignment="TOP_CENTER" textFill="WHITE">
+               <font>
+                  <Font size="150.0" />
+               </font>
+            </Label>
+         </children>
+      </StackPane>
+   </children>
+</AnchorPane>
