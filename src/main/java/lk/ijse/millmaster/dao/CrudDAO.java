@@ -1,4 +1,4 @@
-package lk.ijse.millmaster.dao.Custom;
+package lk.ijse.millmaster.dao;
 
 import java.sql.SQLException;
 
