@@ -1,4 +1,8 @@
 package lk.ijse.millmaster.dao.Custom;
 
-public interface UserDAO {
+import lk.ijse.millmaster.dao.CrudDAO;
+import lk.ijse.millmaster.dto.User;
+
+public interface UserDAO extends CrudDAO<User> {
+
 }
