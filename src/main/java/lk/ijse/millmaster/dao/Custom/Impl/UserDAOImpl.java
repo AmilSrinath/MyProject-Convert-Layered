@@ -8,15 +8,16 @@ import lk.ijse.millmaster.entity.User;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserDAOImpl implements UserDAO {
     @Override
-    public ArrayList<User> getAll() throws SQLException, ClassNotFoundException {
-        ArrayList<User> allUsers = new ArrayList<>();
-        ResultSet rst = SQLUtil.execute("SELECT * FROM User");
+    public List<User> getAll() throws SQLException, ClassNotFoundException {
+        List<User> allUsers = new ArrayList<>();
+        ResultSet rst = SQLUtil.execute("SELECT * FROM user");
         while (rst.next()) {
-            User customer = new User(rst.getString("id"), rst.getString("name"),rst.getString("password"),rst.getString("nic"),rst.getString("email"));
-            allUsers.add(customer);
+            User user = new User(rst.getString("user_id"), rst.getString("User_Name"),rst.getString("User_Password"),rst.getString("User_NIC"),rst.getString("User_Email"));
+            allUsers.add(user);
         }
         return allUsers;
     }

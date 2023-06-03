@@ -8,16 +8,17 @@ import lk.ijse.millmaster.entity.User;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserBOImpl implements UserBO {
     UserDAO userDAO = (UserDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.USER);
 
     @Override
-    public ArrayList<UserDTO> getAllUsers() throws SQLException, ClassNotFoundException {
-        ArrayList<UserDTO> allUsers= new ArrayList<>();
-        ArrayList<User> all = userDAO.getAll();
-        for (User c : all) {
-            allUsers.add(new UserDTO(c.getId(),c.getName(),c.getPassword(),c.getNic(),c.getEmail()));
+    public List<UserDTO> getAllUsers() throws SQLException, ClassNotFoundException {
+        List<UserDTO> allUsers= new ArrayList<>();
+        List<User> all = userDAO.getAll();
+        for (User u : all) {
+            allUsers.add(new UserDTO(u.getId(),u.getName(),u.getPassword(),u.getNic(),u.getEmail()));
         }
         return allUsers;
     }

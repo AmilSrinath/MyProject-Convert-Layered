@@ -146,7 +146,7 @@ public class ManageUserFormController implements Initializable{
     }
 
     void getAll() throws SQLException {
-        try{
+        /*try{
             observableList = FXCollections.observableArrayList();
             List<UserDTO> userList = UserModel.getAll();
 
@@ -163,20 +163,22 @@ public class ManageUserFormController implements Initializable{
         }catch (SQLException e){
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Query Error!!").show();
-        }
+        }*/
 
-        /*tblUser.getItems().clear();
+        //---------------------------------------------------------------------
         try {
-            ArrayList<UserDTO> allCustomers = userBO.getAllUsers();
+            observableList = FXCollections.observableArrayList();
+            List<UserDTO> allCustomers = userBO.getAllUsers();
 
             for (UserDTO c : allCustomers) {
-                tblUser.getItems().add(new UserTM(c.getId(), c.getName(), c.getPassword(),c.getNic(),c.getEmail()));
+                observableList.add(new UserTM(c.getId(), c.getName(), c.getPassword(),c.getNic(),c.getEmail()));
             }
+            tblUser.setItems(observableList);
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
         } catch (ClassNotFoundException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
-        }*/
+        }
     }
 
     public void txtReEnterPasswordOnInputMethodTextChanged(KeyEvent keyEvent) {
@@ -353,6 +355,10 @@ public class ManageUserFormController implements Initializable{
         if (!Regex.setTextColor(TextFilds.LANKA_ID,txtNIC))return false;
         if (!Regex.setTextColor(TextFilds.EMAIL,txtEmail))return false;
         return true;
+    }
+
+    public void OnMouseClicktxtSearchUser(MouseEvent mouseEvent) {
+        searchFilter();
     }
 }
 
