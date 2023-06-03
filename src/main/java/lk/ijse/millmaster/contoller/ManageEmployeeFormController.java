@@ -9,7 +9,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -20,18 +19,14 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lk.ijse.millmaster.dto.Employee;
-import lk.ijse.millmaster.dto.User;
-import lk.ijse.millmaster.dto.tm.BuyerTM;
+import lk.ijse.millmaster.dto.UserDTO;
 import lk.ijse.millmaster.dto.tm.EmployeeTM;
-import lk.ijse.millmaster.dto.tm.UserTM;
 import lk.ijse.millmaster.model.EmployeeModel;
-import lk.ijse.millmaster.model.SupplierModel;
 import lk.ijse.millmaster.model.UserModel;
 import lk.ijse.millmaster.util.Regex;
 import lk.ijse.millmaster.util.TextFilds;
 
 import java.io.IOException;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -206,7 +201,7 @@ public class ManageEmployeeFormController implements Initializable {
             return;
         }
         try {
-            User user = UserModel.searchByName(lblUserName.getText());
+            UserDTO user = UserModel.searchByName(lblUserName.getText());
             fillItemFields(user);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -285,7 +280,7 @@ public class ManageEmployeeFormController implements Initializable {
         colUserID.setCellValueFactory(new PropertyValueFactory<>("userID"));
     }
 
-    private void fillItemFields(User employee) {
+    private void fillItemFields(UserDTO employee) {
         lblUserID.setText(employee.getId());
     }
 

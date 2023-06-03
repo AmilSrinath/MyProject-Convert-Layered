@@ -2,7 +2,6 @@ package lk.ijse.millmaster.model;
 
 import lk.ijse.millmaster.db.DBConnection;
 import lk.ijse.millmaster.dto.Assest;
-import lk.ijse.millmaster.dto.User;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

@@ -14,21 +14,15 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import lk.ijse.millmaster.dto.Assest;
 import lk.ijse.millmaster.dto.Buyer;
-import lk.ijse.millmaster.dto.User;
-import lk.ijse.millmaster.dto.tm.AssestTM;
+import lk.ijse.millmaster.dto.UserDTO;
 import lk.ijse.millmaster.dto.tm.BuyerTM;
-import lk.ijse.millmaster.dto.tm.UserTM;
-import lk.ijse.millmaster.model.AssestModel;
 import lk.ijse.millmaster.model.BuyerModel;
-import lk.ijse.millmaster.model.SupplierModel;
 import lk.ijse.millmaster.model.UserModel;
 import lk.ijse.millmaster.util.Regex;
 import lk.ijse.millmaster.util.TextFilds;
 import lombok.SneakyThrows;
 
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -158,7 +152,7 @@ public class ManageBuyerFormController implements Initializable {
 
     public void btnSaveOnAction(javafx.event.ActionEvent actionEvent) throws SQLException {
         try {
-            User user = UserModel.searchByName(lblUserName.getText());
+            UserDTO user = UserModel.searchByName(lblUserName.getText());
             fillItemFields(user);
 //            txtQty.requestFocus();
         } catch (SQLException e) {
@@ -233,7 +227,7 @@ public class ManageBuyerFormController implements Initializable {
         colUserID.setCellValueFactory(new PropertyValueFactory<>("userID"));
     }
 
-    private void fillItemFields(User user) {
+    private void fillItemFields(UserDTO user) {
         lblUserID.setText(user.getId());
     }
 

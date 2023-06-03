@@ -19,7 +19,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import lk.ijse.millmaster.dto.User;
+import lk.ijse.millmaster.dto.UserDTO;
 import lk.ijse.millmaster.model.UserModel;
 import lombok.SneakyThrows;
 
@@ -107,7 +107,7 @@ public class LoginFormController implements Initializable{
     private void btnSignInOnAction() {
         String user_name = (String) comUsername.getSelectionModel().getSelectedItem();
         try{
-            User user = UserModel.searchByUser_Name(user_name);
+            UserDTO user = UserModel.searchByUser_Name(user_name);
 
             if (user.getPassword().equalsIgnoreCase(txtPassword.getText())){
                 FXMLLoader loader= new FXMLLoader(getClass().getResource("/view/HomeForm.fxml"));

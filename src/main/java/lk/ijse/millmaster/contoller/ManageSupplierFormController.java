@@ -1,7 +1,6 @@
 package lk.ijse.millmaster.contoller;
 
 import com.jfoenix.controls.JFXTextField;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -15,26 +14,17 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import lk.ijse.millmaster.dto.Buyer;
 import lk.ijse.millmaster.dto.Supplier;
-import lk.ijse.millmaster.dto.User;
-import lk.ijse.millmaster.dto.tm.BuyerTM;
 import lk.ijse.millmaster.dto.tm.SupplierTM;
-import lk.ijse.millmaster.model.BuyerModel;
-import lk.ijse.millmaster.model.OrderModel;
 import lk.ijse.millmaster.model.SupplierModel;
-import lk.ijse.millmaster.model.UserModel;
 import lk.ijse.millmaster.util.Regex;
 import lk.ijse.millmaster.util.TextFilds;
 import lombok.SneakyThrows;
 
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.util.*;
 import java.util.function.Predicate;
 

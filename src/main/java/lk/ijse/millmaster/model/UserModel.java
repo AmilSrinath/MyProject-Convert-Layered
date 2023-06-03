@@ -1,8 +1,7 @@
 package lk.ijse.millmaster.model;
 
-import javafx.scene.control.Button;
 import lk.ijse.millmaster.db.DBConnection;
-import lk.ijse.millmaster.dto.User;
+import lk.ijse.millmaster.dto.UserDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,15 +12,15 @@ import java.util.List;
 
 public class UserModel {
 
-    public static List<User> getAll() throws SQLException {
+    public static List<UserDTO> getAll() throws SQLException {
         Connection con = DBConnection.getInstance().getConnection();
         String sql = "SELECT * FROM user";
 
-        List<User> data = new ArrayList<>();
+        List<UserDTO> data = new ArrayList<>();
 
         ResultSet resultSet = con.createStatement().executeQuery(sql);
         while (resultSet.next()) {
-            data.add(new User(
+            data.add(new UserDTO(
                     resultSet.getString(1),
                     resultSet.getString(2),
                     resultSet.getString(3),
@@ -45,7 +44,7 @@ public class UserModel {
         return username;
     }
 
-    public static User searchByUser_Name(String user_name) throws SQLException {
+    public static UserDTO searchByUser_Name(String user_name) throws SQLException {
         Connection con = DBConnection.getInstance().getConnection();
         String sql = "SELECT * FROM user WHERE User_Name = ?";
         PreparedStatement pstm = con.prepareStatement(sql);
@@ -53,7 +52,7 @@ public class UserModel {
 
         ResultSet resultSet = pstm.executeQuery();
         if (resultSet.next()) {
-            return new User(
+            return new UserDTO(
                     resultSet.getString(1),
                     resultSet.getString(2),
                     resultSet.getString(3),
@@ -64,7 +63,7 @@ public class UserModel {
         return null;
     }
 
-    public static User searchByName(String name) throws SQLException {
+    public static UserDTO searchByName(String name) throws SQLException {
         Connection con = DBConnection.getInstance().getConnection();
         String sql = "SELECT * FROM User WHERE User_Name = ?";
 
@@ -73,7 +72,7 @@ public class UserModel {
 
         ResultSet resultSet = pstm.executeQuery();
         if(resultSet.next()) {
-            return new User(
+            return new UserDTO(
                     resultSet.getString(1),
                     resultSet.getString(2),
                     resultSet.getString(3),

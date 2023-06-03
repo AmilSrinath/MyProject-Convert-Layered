@@ -2,20 +2,14 @@ package lk.ijse.millmaster.contoller;
 
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.beans.binding.Bindings;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
@@ -23,22 +17,15 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.util.Duration;
 import lk.ijse.millmaster.bo.BOFactory;
 import lk.ijse.millmaster.bo.Custom.UserBO;
-import lk.ijse.millmaster.db.DBConnection;
-import lk.ijse.millmaster.dto.User;
-import lk.ijse.millmaster.dto.tm.SupplierTM;
+import lk.ijse.millmaster.dto.UserDTO;
 import lk.ijse.millmaster.dto.tm.UserTM;
 import lk.ijse.millmaster.model.UserModel;
 import lk.ijse.millmaster.util.Regex;
 import lk.ijse.millmaster.util.TextFilds;
 import lombok.SneakyThrows;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -46,7 +33,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.regex.Pattern;
 
 public class ManageUserFormController implements Initializable{
 
@@ -160,9 +146,9 @@ public class ManageUserFormController implements Initializable{
     void getAll() throws SQLException {
         try{
             observableList = FXCollections.observableArrayList();
-            List<User> userList = UserModel.getAll();
+            List<UserDTO> userList = UserModel.getAll();
 
-            for (User user : userList){
+            for (UserDTO user : userList){
                 observableList.add(new UserTM(
                    user.getId(),
                    user.getName(),

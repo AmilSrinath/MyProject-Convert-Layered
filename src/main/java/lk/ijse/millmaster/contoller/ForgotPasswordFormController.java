@@ -16,10 +16,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
-import lk.ijse.millmaster.dto.User;
-import lk.ijse.millmaster.model.EmployeeModel;
+import lk.ijse.millmaster.dto.UserDTO;
 import lk.ijse.millmaster.model.UserModel;
 import lombok.SneakyThrows;
 
@@ -64,7 +62,7 @@ public class ForgotPasswordFormController implements Initializable {
             int otp = new Random().nextInt(9000) + 1000;
             comUserName.setStyle("-fx-background-color: null");
             try {
-                User user = UserModel.searchByName(Username);
+                UserDTO user = UserModel.searchByName(Username);
                 fillItemFields(user);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -96,7 +94,7 @@ public class ForgotPasswordFormController implements Initializable {
         }
     }
 
-    private void fillItemFields(User user) {
+    private void fillItemFields(UserDTO user) {
         lblEmail.setText(user.getEmail());
     }
 

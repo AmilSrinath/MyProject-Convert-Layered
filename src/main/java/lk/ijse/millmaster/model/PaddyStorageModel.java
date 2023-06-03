@@ -2,8 +2,6 @@ package lk.ijse.millmaster.model;
 
 import lk.ijse.millmaster.db.DBConnection;
 import lk.ijse.millmaster.dto.PaddyStorage;
-import lk.ijse.millmaster.dto.Product;
-import lk.ijse.millmaster.dto.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
