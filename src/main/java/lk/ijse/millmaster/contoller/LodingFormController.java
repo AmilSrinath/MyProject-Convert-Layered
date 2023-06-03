@@ -38,7 +38,7 @@ public class LodingFormController implements Initializable {
         imageView.setCache(true);
 
         Timeline timeline = new Timeline();
-        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(8000), actionEvent -> {
+        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(10), actionEvent -> {
             System.out.println("Initializing Application....");
             System.out.println("Welcome to System v1.0.0");
         });

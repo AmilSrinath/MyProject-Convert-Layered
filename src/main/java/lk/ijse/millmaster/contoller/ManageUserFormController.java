@@ -165,6 +165,19 @@ public class ManageUserFormController implements Initializable{
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Query Error!!").show();
         }
+
+        /*tblUser.getItems().clear();
+        try {
+            ArrayList<UserDTO> allCustomers = userBO.getAllUsers();
+
+            for (UserDTO c : allCustomers) {
+                tblUser.getItems().add(new UserTM(c.getId(), c.getName(), c.getPassword(),c.getNic(),c.getEmail()));
+            }
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        }*/
     }
 
     public void txtReEnterPasswordOnInputMethodTextChanged(KeyEvent keyEvent) {
@@ -241,7 +254,6 @@ public class ManageUserFormController implements Initializable{
         if (index <= -1) {
             return;
         }
-        System.out.println(">>>>> "+index);
         txtUserID.setText(colUserId.getCellData(index).toString());
         txtName.setText(colUserName.getCellData(index).toString());
         txtPassword.setText(colUserPassword.getCellData(index).toString());
@@ -256,18 +268,9 @@ public class ManageUserFormController implements Initializable{
         Optional<ButtonType> result = new Alert(Alert.AlertType.INFORMATION, "Are you sure to remove?", yes, no).showAndWait();
 
         if (result.orElse(no) == yes) {
-            /*try (Connection con = DriverManager.getConnection(URL, props)) {
-                String sql = "DELETE FROM user WHERE User_ID = ?";
-                PreparedStatement pstm = con.prepareStatement(sql);
-                pstm.setString(1, txtUserID.getText());
-                pstm.executeUpdate();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }*/
             if (!userBO.deleteUser(txtUserID.getText())){
                 new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
             }
-
         }
         getAll();
         txtUserID.setText("");
