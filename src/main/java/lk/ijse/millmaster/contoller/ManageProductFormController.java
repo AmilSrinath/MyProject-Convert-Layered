@@ -194,15 +194,16 @@ public class ManageProductFormController implements Initializable {
     }
 
     @FXML
-    void btnSaveOnAction(ActionEvent event) throws SQLException {
+    void btnSaveOnAction(ActionEvent event) throws SQLException, ClassNotFoundException {
         if (!isValidated()){
             new Alert(Alert.AlertType.ERROR,"Pleace Check TextFilds !").show();
             return;
         }
 
+        String Pid = lblProductID.getText();
         String Sid = comStockID.getValue();
         String paddyType = comProductType.getValue();
-        String quntity = txtQuntity.getText();
+        int quntity = Integer.parseInt(txtQuntity.getText());
         String paddyquntity = txtPaddyQuntity.getText();
         String manufactureDate = String.valueOf(txtManufactureDate.getValue());
         String expireDate = String.valueOf(txtExpireDate.getValue());
@@ -214,7 +215,10 @@ public class ManageProductFormController implements Initializable {
 
         if (!style.equalsIgnoreCase("-fx-background-color: red")) {
             if (result.orElse(no) == yes) {
-                try (Connection con = DriverManager.getConnection(URL, props)) {
+                if (!productBO.addUser(new ProductDTO(Pid,quntity,paddyType,manufactureDate,expireDate,Sid))){
+                    new Alert(Alert.AlertType.ERROR,"SQL Error !!").show();
+                }
+                /*try (Connection con = DriverManager.getConnection(URL, props)) {
                     String sql = "INSERT INTO production(Product_ID , Product_Quntity, Product_Type, Product_Manufact, Product_Expire, Stock_ID) VALUES(?,?,?,?,?,?)";
 
                     PreparedStatement pstm = con.prepareStatement(sql);
@@ -241,7 +245,8 @@ public class ManageProductFormController implements Initializable {
                     } else {
                         new Alert(Alert.AlertType.ERROR, "Order Not Placed!").show();
                     }
-                }
+                }*/
+
             }
         }else {
             lblError.setText("Paddy Quntity Invalid !");

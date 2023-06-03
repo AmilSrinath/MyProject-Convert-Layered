@@ -24,7 +24,7 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public boolean add(Product entity) throws SQLException, ClassNotFoundException {
-        return false;
+        return SQLUtil.execute("INSERT INTO production(Product_ID , Product_Quntity, Product_Type, Product_Manufact, Product_Expire, Stock_ID) VALUES(?,?,?,?,?,?)",entity.getId(),entity.getQuntity(),entity.getType(),entity.getManufact(),entity.getExpire(),entity.getSid());
     }
 
     @Override
