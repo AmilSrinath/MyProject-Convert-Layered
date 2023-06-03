@@ -35,4 +35,28 @@ public class UserDAOImpl implements UserDAO {
     public boolean delete(String id) throws SQLException, ClassNotFoundException {
         return SQLUtil.execute("DELETE FROM user WHERE User_ID = ?",id);
     }
+
+    @Override
+    public String generateNewID() throws SQLException, ClassNotFoundException {
+        ResultSet rst = SQLUtil.execute("SELECT User_ID FROM User ORDER BY User_ID DESC LIMIT 1;");
+        if (rst.next()) {
+            String string=rst.getString(1);
+            String[] strings = string.split("U0");
+            int id = Integer.parseInt(strings[1]);
+            id++;
+            String ID = String.valueOf(id);
+            int length = ID.length();
+            if (length < 2){
+                return "U00"+id;
+            }else {
+                if (length < 3){
+                    return "U0"+id;
+                }else {
+                    return "U"+id;
+                }
+            }
+        } else {
+            return "U001";
+        }
+    }
 }

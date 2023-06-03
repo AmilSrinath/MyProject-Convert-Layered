@@ -128,9 +128,9 @@ public class ManageUserFormController implements Initializable{
         });
     }
 
-    private void generateNextUserId() {
+    private void generateNextUserId() throws ClassNotFoundException {
         try {
-            String nextId = UserModel.generateNextOrderId();
+            String nextId = userBO.generateNewUserID();
             lblUserID.setText(nextId);
         } catch (SQLException e) {
             throw new RuntimeException(e);
