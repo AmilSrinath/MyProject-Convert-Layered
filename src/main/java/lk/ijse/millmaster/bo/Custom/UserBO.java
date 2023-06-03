@@ -6,11 +6,11 @@ import lk.ijse.millmaster.dto.User;
 import java.sql.SQLException;
 
 public interface UserBO extends SuperBO {
-    public boolean addCustomer(User dto) throws SQLException, ClassNotFoundException ;
+    public boolean addUser(User dto) throws SQLException, ClassNotFoundException ;
 
-    public boolean updateCustomer(User dto) throws SQLException, ClassNotFoundException ;
+    public boolean updateUser(User dto) throws SQLException, ClassNotFoundException ;
 
-    public boolean existCustomer(String id) throws SQLException, ClassNotFoundException;
+    public boolean existUser(String id) throws SQLException, ClassNotFoundException;
 
-    public boolean deleteCustomer(String id) throws SQLException, ClassNotFoundException;
+    public boolean deleteUser(String id) throws SQLException, ClassNotFoundException;
 }
