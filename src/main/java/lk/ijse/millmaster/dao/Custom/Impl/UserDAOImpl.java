@@ -15,11 +15,11 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean update(User entity) throws SQLException, ClassNotFoundException {
-        return false;
+        return SQLUtil.execute("UPDATE User SET User_name = ?, User_password = ?, User_nic = ?, User_email = ?  WHERE User_id = ?",entity.getName(),entity.getPassword(),entity.getNic(),entity.getEmail(),entity.getId());
     }
 
     @Override
     public boolean delete(String id) throws SQLException, ClassNotFoundException {
-        return false;
+        return SQLUtil.execute("DELETE FROM user WHERE User_ID = ?",id);
     }
 }

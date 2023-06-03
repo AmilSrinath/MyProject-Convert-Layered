@@ -17,11 +17,11 @@ public class UserBOImpl implements UserBO {
 
     @Override
     public boolean updateUser(UserDTO dto) throws SQLException, ClassNotFoundException {
-        return false;
+        return userDAO.update(new User(dto.getId(),dto.getName(),dto.getPassword(),dto.getNic(),dto.getEmail()));
     }
 
     @Override
     public boolean deleteUser(String id) throws SQLException, ClassNotFoundException {
-        return false;
+        return userDAO.delete(id);
     }
 }

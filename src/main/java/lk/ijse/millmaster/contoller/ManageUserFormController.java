@@ -85,6 +85,9 @@ public class ManageUserFormController implements Initializable{
     public Button btnUser;
 
 
+    UserBO userBO = (UserBO) BOFactory.getBoFactory().getBO(BOFactory.BOTypes.USER);
+
+
     @SneakyThrows
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -173,9 +176,6 @@ public class ManageUserFormController implements Initializable{
     }
 
     public void btnSaveOnAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
-        UserBO userBO = (UserBO) BOFactory.getBoFactory().getBO(BOFactory.BOTypes.USER);
-
-
         if (!isValidated()){
             new Alert(Alert.AlertType.WARNING,"Pleace Check TextFilds !").show();
             return;
@@ -250,20 +250,24 @@ public class ManageUserFormController implements Initializable{
         txtEmail.setText(colUserEmail.getCellData(index).toString());
     }
 
-    public void btnDeleteOnAction(ActionEvent actionEvent) throws SQLException {
+    public void btnDeleteOnAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
         ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
         Optional<ButtonType> result = new Alert(Alert.AlertType.INFORMATION, "Are you sure to remove?", yes, no).showAndWait();
 
         if (result.orElse(no) == yes) {
-            try (Connection con = DriverManager.getConnection(URL, props)) {
+            /*try (Connection con = DriverManager.getConnection(URL, props)) {
                 String sql = "DELETE FROM user WHERE User_ID = ?";
                 PreparedStatement pstm = con.prepareStatement(sql);
                 pstm.setString(1, txtUserID.getText());
                 pstm.executeUpdate();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
+            }*/
+            if (!userBO.deleteUser(txtUserID.getText())){
+                new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
             }
+
         }
         getAll();
         txtUserID.setText("");
@@ -275,7 +279,7 @@ public class ManageUserFormController implements Initializable{
         generateNextUserId();
     }
 
-    public void btnUpdateOnAction(ActionEvent actionEvent) throws SQLException {
+    public void btnUpdateOnAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         if (!isValidated()){
             new Alert(Alert.AlertType.WARNING,"Pleace Check TextFilds !").show();
             return;
@@ -289,22 +293,13 @@ public class ManageUserFormController implements Initializable{
         String email = txtEmail.getText();
 
         if (password.equalsIgnoreCase(reEnterPassword)) {
-            try (Connection con = DriverManager.getConnection(URL, props)) {
-                String sql = "UPDATE User SET User_name = ?, User_password = ?, User_nic = ?, User_email = ?  WHERE User_id = ?";
-
-                PreparedStatement pstm = con.prepareStatement(sql);
-                pstm.setString(1, name);
-                pstm.setString(2, password);
-                pstm.setString(3, nic);
-                pstm.setString(4, email);
-                pstm.setString(5, id);
-
-                if (pstm.executeUpdate() > 0) {
-                    new Alert(Alert.AlertType.CONFIRMATION, "Customer Updated!!").show();
-                }
-                txtReEnterPassword.setStyle("-fx-background-color: none;");
-                txtReEnterPassword1.setStyle("-fx-background-color: none;");
+            if (userBO.updateUser(new UserDTO(id,name,password,nic,email))){
+                tblUser.refresh();
+                new Alert(Alert.AlertType.CONFIRMATION, "Customer Updated !!").show();
+            }else {
+                new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
             }
+
         } else {
             txtReEnterPassword.setStyle("-fx-background-color: #e74c3c;");
             txtReEnterPassword1.setStyle("-fx-background-color: #e74c3c;");
