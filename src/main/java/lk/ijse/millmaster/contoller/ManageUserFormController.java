@@ -146,26 +146,6 @@ public class ManageUserFormController implements Initializable{
     }
 
     void getAll() throws SQLException {
-        /*try{
-            observableList = FXCollections.observableArrayList();
-            List<UserDTO> userList = UserModel.getAll();
-
-            for (UserDTO user : userList){
-                observableList.add(new UserTM(
-                   user.getId(),
-                   user.getName(),
-                   user.getPassword(),
-                   user.getNic(),
-                   user.getEmail()
-                ));
-            }
-            tblUser.setItems(observableList);
-        }catch (SQLException e){
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Query Error!!").show();
-        }*/
-
-        //---------------------------------------------------------------------
         try {
             observableList = FXCollections.observableArrayList();
             List<UserDTO> allCustomers = userBO.getAllUsers();
@@ -182,10 +162,6 @@ public class ManageUserFormController implements Initializable{
     }
 
     public void txtReEnterPasswordOnInputMethodTextChanged(KeyEvent keyEvent) {
-
-    }
-
-    public void btnCancelOnAction(ActionEvent actionEvent) {
 
     }
 
