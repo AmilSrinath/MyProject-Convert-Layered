@@ -27,6 +27,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import lk.ijse.millmaster.bo.BOFactory;
+import lk.ijse.millmaster.bo.Custom.UserBO;
 import lk.ijse.millmaster.db.DBConnection;
 import lk.ijse.millmaster.dto.User;
 import lk.ijse.millmaster.dto.tm.SupplierTM;
@@ -185,6 +187,9 @@ public class ManageUserFormController implements Initializable{
     }
 
     public void btnSaveOnAction(ActionEvent actionEvent) throws SQLException {
+        UserBO userBO = (UserBO) BOFactory.getBoFactory().getBO(BOFactory.BOTypes.USER);
+
+
         if (!isValidated()){
             new Alert(Alert.AlertType.WARNING,"Pleace Check TextFilds !").show();
             return;
