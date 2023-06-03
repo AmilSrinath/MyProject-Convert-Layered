@@ -172,7 +172,7 @@ public class ManageUserFormController implements Initializable{
 
     }
 
-    public void btnSaveOnAction(ActionEvent actionEvent) throws SQLException {
+    public void btnSaveOnAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         UserBO userBO = (UserBO) BOFactory.getBoFactory().getBO(BOFactory.BOTypes.USER);
 
 
@@ -181,7 +181,7 @@ public class ManageUserFormController implements Initializable{
             return;
         }
 
-        String id = txtUserID.getText();
+        String id = lblUserID.getText();
         String name = txtName.getText();
         String password = txtPassword.getText();
         String reEnterPassword = txtReEnterPassword.getText();
@@ -189,27 +189,13 @@ public class ManageUserFormController implements Initializable{
         String email = txtEmail.getText();
 
         if (password.equalsIgnoreCase(reEnterPassword)) {
-            try (Connection con = DriverManager.getConnection(URL, props)) {
-                String sql = "INSERT INTO user(User_ID , User_Name, User_Password,User_NIC, User_Email) VALUES(?,?,?,?,?)";
-
-                PreparedStatement pstm = con.prepareStatement(sql);
-                pstm.setString(1, lblUserID.getText());
-                pstm.setString(2, name);
-                pstm.setString(3, password);
-                pstm.setString(4, nic);
-                pstm.setString(5, email);
-
-
-                try {
-                    int affectedRows = pstm.executeUpdate();
-                    if (affectedRows > 0) {
-                        tblUser.refresh();
-                        new Alert(Alert.AlertType.CONFIRMATION, "Customer Added !!").show();
-                    }
-                } catch (Exception ex) {
-                    new Alert(Alert.AlertType.ERROR, "This ID has been previously used!!").show();
-                }
+            if (userBO.addUser(new UserDTO(id,name,password,nic,email))){
+                tblUser.refresh();
+                new Alert(Alert.AlertType.CONFIRMATION, "Customer Added !!").show();
+            }else {
+                new Alert(Alert.AlertType.ERROR, "This ID has been previously used!!").show();
             }
+
             txtReEnterPassword.setStyle("-fx-background-color: 333333;");
             txtUserID.setText("");
             txtNIC.setText("");
