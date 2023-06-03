@@ -2,7 +2,7 @@ package lk.ijse.millmaster.model;
 
 import lk.ijse.millmaster.db.DBConnection;
 import lk.ijse.millmaster.dto.CartDTO;
-import lk.ijse.millmaster.dto.Product;
+import lk.ijse.millmaster.dto.ProductDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,15 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductModel {
-    public static List<Product> getAll() throws SQLException {
+    public static List<ProductDTO> getAll() throws SQLException {
         Connection con = DBConnection.getInstance().getConnection();
         String sql = "SELECT * FROM production";
 
-        List<Product> data = new ArrayList<>();
+        List<ProductDTO> data = new ArrayList<>();
 
         ResultSet resultSet = con.createStatement().executeQuery(sql);
         while (resultSet.next()) {
-            data.add(new Product(
+            data.add(new ProductDTO(
                     resultSet.getString(1),
                     resultSet.getInt(2),
                     resultSet.getString(3),
@@ -32,7 +32,7 @@ public class ProductModel {
         return data;
     }
 
-    public static Product searchById(String code) throws SQLException {
+    public static ProductDTO searchById(String code) throws SQLException {
         Connection con = DBConnection.getInstance().getConnection();
         String sql = "SELECT * FROM production WHERE Product_ID = ?";
 
@@ -41,7 +41,7 @@ public class ProductModel {
 
         ResultSet resultSet = pstm.executeQuery();
         if(resultSet.next()) {
-            return new Product(
+            return new ProductDTO(
                     resultSet.getString(1),
                     resultSet.getInt(2),
                     resultSet.getString(3),

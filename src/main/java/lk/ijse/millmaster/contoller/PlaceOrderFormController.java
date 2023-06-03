@@ -19,8 +19,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import lk.ijse.millmaster.db.DBConnection;
 import lk.ijse.millmaster.dto.CartDTO;
-import lk.ijse.millmaster.dto.PlaceOrder;
-import lk.ijse.millmaster.dto.Product;
+import lk.ijse.millmaster.dto.ProductDTO;
 import lk.ijse.millmaster.dto.tm.OrderTM;
 import lk.ijse.millmaster.dto.tm.PlaceOrderTM;
 import lk.ijse.millmaster.model.PlaceOrderModel;
@@ -37,8 +36,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.util.*;
-
-import static java.awt.SystemColor.text;
 
 public class PlaceOrderFormController implements Initializable {
     private final static String URL = "jdbc:mysql://localhost:3306/Millmaster";
@@ -252,7 +249,7 @@ public class PlaceOrderFormController implements Initializable {
         String code = comProductID.getSelectionModel().getSelectedItem();
         txtQuntity.requestFocus();
         try {
-            Product product = ProductModel.searchById(code);
+            ProductDTO product = ProductModel.searchById(code);
             fillItemFields(product);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -260,7 +257,7 @@ public class PlaceOrderFormController implements Initializable {
         }
     }
 
-    private void fillItemFields(Product product) {
+    private void fillItemFields(ProductDTO product) {
         lblProductName.setText(product.getType());
         lblProductCount.setText(String.valueOf(product.getQuntity()));
     }

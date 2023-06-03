@@ -141,7 +141,7 @@
          </font>
       </Button>
       <VBox fx:id="SearchBarVBox" layoutX="775.0" layoutY="206.0" prefHeight="38.0" prefWidth="368.0" style="-fx-background-color: #fca404;" styleClass="SearchBarVBox" stylesheets="@../CSS/LoginFormCSS.css" />
-      <JFXTextField fx:id="txtSearchUser" focusColor="#1abc9c" layoutX="824.0" layoutY="207.0" prefHeight="35.0" prefWidth="294.0" promptText="Search" styleClass="searchBarVBox" stylesheets="@../CSS/LoginFormCSS.css" unFocusColor="#1abc9c">
+      <JFXTextField fx:id="txtSearchUser" focusColor="#1abc9c" layoutX="824.0" layoutY="207.0" onMouseClicked="#OnMouseClicktxtSearchUser" prefHeight="35.0" prefWidth="294.0" promptText="Search" styleClass="searchBarVBox" stylesheets="@../CSS/LoginFormCSS.css" unFocusColor="#1abc9c">
          <font>
             <Font name="Madhura" size="17.0" />
          </font>

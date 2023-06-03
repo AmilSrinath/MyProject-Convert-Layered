@@ -83,10 +83,7 @@ public class ManageUserFormController implements Initializable{
     @FXML
     private TableColumn<?, ?> colUserEmail;
     public Button btnUser;
-
-
     UserBO userBO = (UserBO) BOFactory.getBoFactory().getBO(BOFactory.BOTypes.USER);
-
 
     @SneakyThrows
     @Override
@@ -150,8 +147,8 @@ public class ManageUserFormController implements Initializable{
             observableList = FXCollections.observableArrayList();
             List<UserDTO> allCustomers = userBO.getAllUsers();
 
-            for (UserDTO c : allCustomers) {
-                observableList.add(new UserTM(c.getId(), c.getName(), c.getPassword(),c.getNic(),c.getEmail()));
+            for (UserDTO u : allCustomers) {
+                observableList.add(new UserTM(u.getId(), u.getName(), u.getPassword(),u.getNic(),u.getEmail()));
             }
             tblUser.setItems(observableList);
         } catch (SQLException e) {
@@ -161,9 +158,7 @@ public class ManageUserFormController implements Initializable{
         }
     }
 
-    public void txtReEnterPasswordOnInputMethodTextChanged(KeyEvent keyEvent) {
-
-    }
+    public void txtReEnterPasswordOnInputMethodTextChanged(KeyEvent keyEvent) {}
 
     public void btnSaveOnAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         if (!isValidated()){
@@ -187,12 +182,7 @@ public class ManageUserFormController implements Initializable{
             }
 
             txtReEnterPassword.setStyle("-fx-background-color: 333333;");
-            txtUserID.setText("");
-            txtNIC.setText("");
-            txtName.setText("");
-            txtPassword.setText("");
-            txtReEnterPassword.setText("");
-            txtEmail.setText("");
+            Clear();
 
             } else {
                 txtReEnterPassword.setStyle("-fx-background-color: #e74c3c;");
@@ -250,12 +240,7 @@ public class ManageUserFormController implements Initializable{
             }
         }
         getAll();
-        txtUserID.setText("");
-        txtNIC.setText("");
-        txtName.setText("");
-        txtPassword.setText("");
-        txtReEnterPassword.setText("");
-        txtEmail.setText("");
+        Clear();
         generateNextUserId();
     }
 
@@ -296,6 +281,10 @@ public class ManageUserFormController implements Initializable{
     }
 
     public void btnClearOnAction(ActionEvent actionEvent) {
+        Clear();
+    }
+
+    void Clear(){
         txtUserID.setText("");
         txtNIC.setText("");
         txtName.setText("");

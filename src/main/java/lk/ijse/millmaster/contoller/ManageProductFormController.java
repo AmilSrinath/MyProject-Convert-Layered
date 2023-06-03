@@ -14,15 +14,16 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import lk.ijse.millmaster.bo.BOFactory;
+import lk.ijse.millmaster.bo.Custom.ProductBO;
+import lk.ijse.millmaster.bo.Custom.UserBO;
 import lk.ijse.millmaster.dto.PaddyStorage;
-import lk.ijse.millmaster.dto.Product;
-import lk.ijse.millmaster.dto.tm.BuyerTM;
-import lk.ijse.millmaster.dto.tm.EmployeeTM;
+import lk.ijse.millmaster.dto.ProductDTO;
+import lk.ijse.millmaster.dto.UserDTO;
 import lk.ijse.millmaster.dto.tm.ProductTM;
+import lk.ijse.millmaster.dto.tm.UserTM;
 import lk.ijse.millmaster.model.PaddyStorageModel;
-import lk.ijse.millmaster.model.PlaceOrderModel;
 import lk.ijse.millmaster.model.ProductModel;
-import lk.ijse.millmaster.model.SupplierModel;
 import lk.ijse.millmaster.util.Regex;
 import lk.ijse.millmaster.util.TextFilds;
 import lombok.SneakyThrows;
@@ -108,6 +109,8 @@ public class ManageProductFormController implements Initializable {
     @FXML
     private ComboBox<String> comProductType;
     ObservableList<ProductTM> observableList;
+
+    ProductBO productBO = (ProductBO) BOFactory.getBoFactory().getBO(BOFactory.BOTypes.PRODUCT);
 
     @SneakyThrows
     @Override
@@ -250,21 +253,20 @@ public class ManageProductFormController implements Initializable {
         generateNextProductID();
     }
 
-    private void getAll() throws SQLException {
-        observableList = FXCollections.observableArrayList();
-        List<Product> productList = ProductModel.getAll();
+    private void getAll() {
+        try {
+            observableList = FXCollections.observableArrayList();
+            List<ProductDTO> allProducts = productBO.getAllUsers();
 
-        for ( Product product: productList){
-            observableList.add(new ProductTM(
-                    product.getId(),
-                    product.getQuntity(),
-                    product.getType(),
-                    product.getManufact(),
-                    product.getExpire(),
-                    product.getSid()
-            ));
+            for (ProductDTO p : allProducts) {
+                observableList.add(new ProductTM(p.getId(), p.getQuntity(),p.getType(),p.getManufact(),p.getExpire(),p.getSid()));
+            }
+            tblProduct.setItems(observableList);
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
         }
-        tblProduct.setItems(observableList);
     }
 
     void setCellValueFactory(){

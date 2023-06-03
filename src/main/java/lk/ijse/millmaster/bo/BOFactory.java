@@ -1,5 +1,6 @@
 package lk.ijse.millmaster.bo;
 
+import lk.ijse.millmaster.bo.Custom.Impl.ProductBOImpl;
 import lk.ijse.millmaster.bo.Custom.Impl.UserBOImpl;
 
 public class BOFactory {
@@ -11,7 +12,7 @@ public class BOFactory {
     }
 
     public enum BOTypes{
-        USER
+        USER,PRODUCT
     }
 
     //Object creation logic for BO objects
@@ -19,6 +20,8 @@ public class BOFactory {
         switch (types){
             case USER:
                 return new UserBOImpl();
+            case PRODUCT:
+                return new ProductBOImpl();
             default:
                 return null;
         }
