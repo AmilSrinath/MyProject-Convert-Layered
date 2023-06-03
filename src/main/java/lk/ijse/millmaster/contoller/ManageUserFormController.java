@@ -96,7 +96,6 @@ public class ManageUserFormController implements Initializable{
         setPasswordDisable();
         searchFilter();
         generateNextUserId();
-//        txtUserID.setText(String.valueOf(lblUserID.getText()));
     }
 
     private void searchFilter(){
