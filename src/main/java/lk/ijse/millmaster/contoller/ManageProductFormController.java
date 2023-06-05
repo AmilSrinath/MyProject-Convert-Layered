@@ -12,16 +12,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import lk.ijse.millmaster.bo.BOFactory;
 import lk.ijse.millmaster.bo.Custom.ProductBO;
-import lk.ijse.millmaster.bo.Custom.UserBO;
 import lk.ijse.millmaster.dto.PaddyStorage;
 import lk.ijse.millmaster.dto.ProductDTO;
-import lk.ijse.millmaster.dto.UserDTO;
 import lk.ijse.millmaster.dto.tm.ProductTM;
-import lk.ijse.millmaster.dto.tm.UserTM;
 import lk.ijse.millmaster.model.PaddyStorageModel;
 import lk.ijse.millmaster.model.ProductModel;
 import lk.ijse.millmaster.util.Regex;
@@ -54,15 +49,13 @@ public class ManageProductFormController implements Initializable {
     public Label lblProductID;
     public ComboBox <String> comStockID;
     public TableColumn <?, ?> colStockID;
-    public ComboBox <String> comPaddyID;
     public Label lblProductID1;
     public Label lblPaddyType;
     public Label lblProductID11;
     public Label lblQuntity;
     public JFXTextField txtPaddyQuntity;
     public Label lblError;
-    @FXML
-    private AnchorPane ManageUserForm;
+    public TableColumn<?, ?> colPaddyQun;
 
     @FXML
     private TableView<ProductTM> tblProduct;
@@ -87,21 +80,6 @@ public class ManageProductFormController implements Initializable {
 
     @FXML
     private JFXTextField txtQuntity;
-
-    @FXML
-    private Button btnSave;
-
-    @FXML
-    private Button btnDelete;
-
-    @FXML
-    private Button btnUpdate;
-
-    @FXML
-    private Button btnClear;
-
-    @FXML
-    private VBox SearchBarVBox;
 
     @FXML
     private JFXTextField txtSearchProduct;
@@ -204,7 +182,7 @@ public class ManageProductFormController implements Initializable {
         String Sid = comStockID.getValue();
         String paddyType = comProductType.getValue();
         int quntity = Integer.parseInt(txtQuntity.getText());
-        String paddyquntity = txtPaddyQuntity.getText();
+        int paddyquntity = Integer.parseInt(txtPaddyQuntity.getText());
         String manufactureDate = String.valueOf(txtManufactureDate.getValue());
         String expireDate = String.valueOf(txtExpireDate.getValue());
         String style = txtPaddyQuntity.getStyle();
@@ -215,38 +193,9 @@ public class ManageProductFormController implements Initializable {
 
         if (!style.equalsIgnoreCase("-fx-background-color: red")) {
             if (result.orElse(no) == yes) {
-                if (!productBO.addUser(new ProductDTO(Pid,quntity,paddyType,manufactureDate,expireDate,Sid))){
+                if (!productBO.addProduct(new ProductDTO(Pid,quntity,paddyquntity,paddyType,manufactureDate,expireDate,Sid))){
                     new Alert(Alert.AlertType.ERROR,"SQL Error !!").show();
                 }
-                /*try (Connection con = DriverManager.getConnection(URL, props)) {
-                    String sql = "INSERT INTO production(Product_ID , Product_Quntity, Product_Type, Product_Manufact, Product_Expire, Stock_ID) VALUES(?,?,?,?,?,?)";
-
-                    PreparedStatement pstm = con.prepareStatement(sql);
-                    pstm.setString(1, lblProductID.getText());
-                    pstm.setString(2, quntity);
-                    pstm.setString(3, paddyType);
-                    pstm.setString(4, manufactureDate);
-                    pstm.setString(5, expireDate);
-                    pstm.setString(6, Sid);
-
-                    try {
-                        int affectedRows = pstm.executeUpdate();
-                        if (affectedRows > 0) {
-
-                        }
-                    } catch (Exception ex) {
-                        new Alert(Alert.AlertType.CONFIRMATION, "This ID has been previously used!!").show();
-                    }
-
-                    boolean isAdded = ProductModel.addProduct(Sid, paddyquntity);
-                    if (isAdded) {
-                        new Alert(Alert.AlertType.CONFIRMATION, "Order is Placed!").show();
-                        setComStockID();
-                    } else {
-                        new Alert(Alert.AlertType.ERROR, "Order Not Placed!").show();
-                    }
-                }*/
-
             }
         }else {
             lblError.setText("Paddy Quntity Invalid !");
@@ -261,10 +210,10 @@ public class ManageProductFormController implements Initializable {
     private void getAll() {
         try {
             observableList = FXCollections.observableArrayList();
-            List<ProductDTO> allProducts = productBO.getAllUsers();
+            List<ProductDTO> allProducts = productBO.getAllProduct();
 
             for (ProductDTO p : allProducts) {
-                observableList.add(new ProductTM(p.getId(), p.getQuntity(),p.getType(),p.getManufact(),p.getExpire(),p.getSid()));
+                observableList.add(new ProductTM(p.getId(), p.getQuntity(),p.getPaddyQun(),p.getType(),p.getManufact(),p.getExpire(),p.getSid()));
             }
             tblProduct.setItems(observableList);
         } catch (SQLException e) {
@@ -277,6 +226,7 @@ public class ManageProductFormController implements Initializable {
     void setCellValueFactory(){
         colProductID.setCellValueFactory(new PropertyValueFactory<>("id"));
         colProductQuntity.setCellValueFactory(new PropertyValueFactory<>("quntity"));
+        colPaddyQun.setCellValueFactory(new PropertyValueFactory<>("paddyQun"));
         colProductType.setCellValueFactory(new PropertyValueFactory<>("type"));
         colManufactureDate.setCellValueFactory(new PropertyValueFactory<>("manufact"));
         colExpireDate.setCellValueFactory(new PropertyValueFactory<>("expire"));
@@ -284,7 +234,7 @@ public class ManageProductFormController implements Initializable {
     }
 
     @FXML
-    void btnUpdateOnAction(ActionEvent event) throws SQLException {
+    void btnUpdateOnAction(ActionEvent event) throws SQLException, ClassNotFoundException {
         if (!isValidated()){
             new Alert(Alert.AlertType.ERROR,"Pleace Check TextFilds !").show();
             return;
@@ -292,12 +242,15 @@ public class ManageProductFormController implements Initializable {
 
         String id = txtProductID.getText();
         String paddyType = comProductType.getValue();
-        String quntity = txtQuntity.getText();
+        int quntity = Integer.parseInt(txtQuntity.getText());
+        int paddyQun = Integer.parseInt(txtPaddyQuntity.getText());
         String manufactureDate = String.valueOf(txtManufactureDate.getValue());
         String expireDate = String.valueOf(txtExpireDate.getValue());
+        String Sid = comStockID.getValue();
 
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            String sql = "UPDATE Production SET Product_Quntity = ?, Product_Type=?, Product_Manufact=?, Product_Expire=? WHERE Product_ID = ?";
+        if (!productBO.updateProduct(new ProductDTO(id,quntity,paddyQun,paddyType,manufactureDate,expireDate,Sid))) {
+            new Alert(Alert.AlertType.ERROR,"SQL Error !!").show();
+            /*String sql = "UPDATE Production SET Product_Quntity = ?, Product_Type=?, Product_Manufact=?, Product_Expire=? WHERE Product_ID = ?";
 
             PreparedStatement pstm = con.prepareStatement(sql);
             pstm.setString(1, quntity);
@@ -308,7 +261,9 @@ public class ManageProductFormController implements Initializable {
 
             if (pstm.executeUpdate() > 0) {
                 new Alert(Alert.AlertType.CONFIRMATION, "Product Updated!!").show();
-            }
+            }*/
+        }else {
+            new Alert(Alert.AlertType.CONFIRMATION,"Update Complete !").show();
         }
         getAll();
         Clear();
@@ -323,6 +278,7 @@ public class ManageProductFormController implements Initializable {
         }
         txtProductID.setText(colProductID.getCellData(index).toString());
         txtQuntity.setText(colProductQuntity.getCellData(index).toString());
+        txtPaddyQuntity.setText(colPaddyQun.getCellData(index).toString());
         comProductType.setValue(colProductType.getCellData(index).toString());
         txtManufactureDate.setValue(LocalDate.parse(colManufactureDate.getCellData(index).toString()));
         txtExpireDate.setValue(LocalDate.parse(colExpireDate.getCellData(index).toString()));
@@ -339,6 +295,7 @@ public class ManageProductFormController implements Initializable {
 
     void Clear(){
         txtProductID.setText("");
+        txtPaddyQuntity.setText("");
         txtQuntity.setText("");
         txtExpireDate.setValue(null);
         txtManufactureDate.setValue(null);
@@ -389,8 +346,8 @@ public class ManageProductFormController implements Initializable {
     }
 
     public boolean isValidated(){
-        if (!Regex.setTextColor(TextFilds.INT,txtQuntity))return false;
-        if (!Regex.setTextColor(TextFilds.INT,txtPaddyQuntity))return false;
+        if (!Regex.setTextColor(TextFilds.INT,txtQuntity)) return false;
+        if (!Regex.setTextColor(TextFilds.INT,txtPaddyQuntity)) return false;
         return true;
     }
 }

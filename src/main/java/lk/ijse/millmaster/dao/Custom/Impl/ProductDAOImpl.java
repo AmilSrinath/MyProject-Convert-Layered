@@ -16,7 +16,7 @@ public class ProductDAOImpl implements ProductDAO {
         List<Product> allProduct = new ArrayList<>();
         ResultSet rst = SQLUtil.execute("SELECT * FROM production");
         while (rst.next()) {
-            Product product = new Product(rst.getString("Product_ID"),rst.getInt("Product_Quntity"),rst.getString("Product_Type"),rst.getString("Product_Manufact"),rst.getString("Product_Expire"),rst.getString("Stock_ID"));
+            Product product = new Product(rst.getString("Product_ID"),rst.getInt("Product_Quntity"),rst.getInt("Paddy_Quntity"),rst.getString("Product_Type"),rst.getString("Product_Manufact"),rst.getString("Product_Expire"),rst.getString("Stock_ID"));
             allProduct.add(product);
         }
         return allProduct;
@@ -24,12 +24,19 @@ public class ProductDAOImpl implements ProductDAO {
 
     @Override
     public boolean add(Product entity) throws SQLException, ClassNotFoundException {
-        return SQLUtil.execute("INSERT INTO production(Product_ID , Product_Quntity, Product_Type, Product_Manufact, Product_Expire, Stock_ID) VALUES(?,?,?,?,?,?)",entity.getId(),entity.getQuntity(),entity.getType(),entity.getManufact(),entity.getExpire(),entity.getSid());
+        return SQLUtil.execute("INSERT INTO production(Product_ID , Product_Quntity, Paddy_Quntity, Product_Type, Product_Manufact, Product_Expire, Stock_ID) VALUES(?,?,?,?,?,?)",entity.getId(),entity.getQuntity(), entity.getPaddyQun(),entity.getType(),entity.getManufact(),entity.getExpire(),entity.getSid());
     }
 
     @Override
     public boolean update(Product entity) throws SQLException, ClassNotFoundException {
-        return false;
+        return SQLUtil.execute("UPDATE Production SET Product_Quntity = ?, Paddy_Quntity = ?, Product_Type = ?, Product_Manufact = ?, Product_Expire = ?, Stock_ID = ? WHERE Product_ID = ? ",
+                entity.getQuntity(),
+                entity.getPaddyQun(),
+                entity.getType(),
+                entity.getManufact(),
+                entity.getExpire(),
+                entity.getSid(),
+                entity.getId());
     }
 
     @Override

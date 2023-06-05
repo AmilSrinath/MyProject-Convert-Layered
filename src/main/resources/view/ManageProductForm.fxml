@@ -24,10 +24,11 @@
       <TableView fx:id="tblProduct" layoutX="516.0" layoutY="261.0" onMouseClicked="#rowOnMouseClicked" prefHeight="444.0" prefWidth="626.0" stylesheets="@../CSS/LoginFormCSS.css">
         <columns>
           <TableColumn fx:id="colProductID" prefWidth="91.0" text="ProductID" />
-          <TableColumn fx:id="colProductType" prefWidth="140.0" text="ProductType" />
-            <TableColumn fx:id="colProductQuntity" prefWidth="115.0" text="ProductQuntity" />
-            <TableColumn fx:id="colManufactureDate" prefWidth="108.0" text="ManufactureDate" />
-            <TableColumn fx:id="colExpireDate" prefWidth="95.0" text="ExpireDate" />
+          <TableColumn fx:id="colProductType" prefWidth="87.0" text="ProductType" />
+            <TableColumn fx:id="colProductQuntity" prefWidth="90.0" text="ProductQuntity" />
+            <TableColumn fx:id="colPaddyQun" prefWidth="91.0" text="PaddyQuntity" />
+            <TableColumn fx:id="colManufactureDate" prefWidth="109.0" text="ManufactureDate" />
+            <TableColumn fx:id="colExpireDate" prefWidth="82.0" text="ExpireDate" />
             <TableColumn fx:id="colStockID" prefWidth="76.0" text="StockID" />
         </columns>
       </TableView>

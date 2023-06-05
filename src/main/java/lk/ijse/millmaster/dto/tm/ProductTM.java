@@ -10,6 +10,7 @@ import lombok.*;
 public class ProductTM {
     private String id;
     private int quntity;
+    private int paddyQun;
     private String type;
     private String manufact;
     private String expire;

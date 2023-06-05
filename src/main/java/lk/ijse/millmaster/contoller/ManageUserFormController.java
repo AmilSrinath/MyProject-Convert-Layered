@@ -35,15 +35,6 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public class ManageUserFormController implements Initializable{
-
-    private final static String URL = "jdbc:mysql://localhost:3306/Millmaster";
-    private final static Properties props = new Properties();
-
-    static{
-        props.setProperty("user", "root");
-        props.setProperty("password", "12345678");
-    }
-
     public AnchorPane ManageUserForm;
     public static Parent root;
     public TableView<UserTM> tblUser;
