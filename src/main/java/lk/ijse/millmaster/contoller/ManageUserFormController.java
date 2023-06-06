@@ -21,15 +21,11 @@ import lk.ijse.millmaster.bo.BOFactory;
 import lk.ijse.millmaster.bo.Custom.UserBO;
 import lk.ijse.millmaster.dto.UserDTO;
 import lk.ijse.millmaster.dto.tm.UserTM;
-import lk.ijse.millmaster.model.UserModel;
 import lk.ijse.millmaster.util.Regex;
 import lk.ijse.millmaster.util.TextFilds;
 import lombok.SneakyThrows;
 
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Predicate;
@@ -73,7 +69,6 @@ public class ManageUserFormController implements Initializable{
 
     @FXML
     private TableColumn<?, ?> colUserEmail;
-    public Button btnUser;
     UserBO userBO = (UserBO) BOFactory.getBoFactory().getBO(BOFactory.BOTypes.USER);
 
     @SneakyThrows
@@ -184,42 +179,6 @@ public class ManageUserFormController implements Initializable{
         generateNextUserId();
     }
 
-    public void showPasswordOnMousePresseds1(MouseEvent mouseEvent) {
-        txtReEnterPassword.setVisible(false);
-        txtReEnterPassword1.setText(txtReEnterPassword.getText());
-        txtReEnterPassword1.setVisible(true);
-    }
-
-    public void showPasswordOnMousePresseds(MouseEvent mouseEvent) {
-        txtPassword.setVisible(false);
-        txtPassword1.setText(txtPassword.getText());
-        txtPassword1.setVisible(true);
-    }
-
-    public void showPasswordOnMouseReleased1(MouseEvent mouseEvent) {
-        txtReEnterPassword.setVisible(true);
-        txtReEnterPassword1.setVisible(false);
-    }
-
-    public void showPasswordOnMouseReleased(MouseEvent mouseEvent) {
-        txtPassword.setVisible(true);
-        txtPassword1.setVisible(false);
-    }
-
-    public void rowOnMouseClicked(MouseEvent mouseEvent) {
-        txtEmail.setStyle("-fx-background-color: null");
-        Integer index = tblUser.getSelectionModel().getSelectedIndex();
-        if (index <= -1) {
-            return;
-        }
-        txtUserID.setText(colUserId.getCellData(index).toString());
-        txtName.setText(colUserName.getCellData(index).toString());
-        txtPassword.setText(colUserPassword.getCellData(index).toString());
-        txtReEnterPassword.setText(colUserPassword.getCellData(index).toString());
-        txtNIC.setText(colUserNic.getCellData(index).toString());
-        txtEmail.setText(colUserEmail.getCellData(index).toString());
-    }
-
     public void btnDeleteOnAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
         ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -263,6 +222,42 @@ public class ManageUserFormController implements Initializable{
         }
         getAll();
         generateNextUserId();
+    }
+
+    public void showPasswordOnMousePresseds1(MouseEvent mouseEvent) {
+        txtReEnterPassword.setVisible(false);
+        txtReEnterPassword1.setText(txtReEnterPassword.getText());
+        txtReEnterPassword1.setVisible(true);
+    }
+
+    public void showPasswordOnMousePresseds(MouseEvent mouseEvent) {
+        txtPassword.setVisible(false);
+        txtPassword1.setText(txtPassword.getText());
+        txtPassword1.setVisible(true);
+    }
+
+    public void showPasswordOnMouseReleased1(MouseEvent mouseEvent) {
+        txtReEnterPassword.setVisible(true);
+        txtReEnterPassword1.setVisible(false);
+    }
+
+    public void showPasswordOnMouseReleased(MouseEvent mouseEvent) {
+        txtPassword.setVisible(true);
+        txtPassword1.setVisible(false);
+    }
+
+    public void rowOnMouseClicked(MouseEvent mouseEvent) {
+        txtEmail.setStyle("-fx-background-color: null");
+        Integer index = tblUser.getSelectionModel().getSelectedIndex();
+        if (index <= -1) {
+            return;
+        }
+        txtUserID.setText(colUserId.getCellData(index).toString());
+        txtName.setText(colUserName.getCellData(index).toString());
+        txtPassword.setText(colUserPassword.getCellData(index).toString());
+        txtReEnterPassword.setText(colUserPassword.getCellData(index).toString());
+        txtNIC.setText(colUserNic.getCellData(index).toString());
+        txtEmail.setText(colUserEmail.getCellData(index).toString());
     }
 
     public void txtReEnterPasswordOnKeyPresed(KeyEvent keyEvent) {

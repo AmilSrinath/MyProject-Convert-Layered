@@ -13,7 +13,7 @@ public interface ProductBO extends SuperBO {
 
     public boolean updateProduct(ProductDTO dto) throws SQLException, ClassNotFoundException;
 
-    public boolean deleteUser(String id) throws SQLException, ClassNotFoundException;
+    public boolean deleteProduct(String id) throws SQLException, ClassNotFoundException;
 
-    public String generateNewUserID() throws SQLException, ClassNotFoundException;
+    public String generateNewProductID() throws SQLException, ClassNotFoundException;
 }

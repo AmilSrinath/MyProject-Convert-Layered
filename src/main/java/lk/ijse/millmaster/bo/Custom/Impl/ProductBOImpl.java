@@ -24,7 +24,14 @@ public class ProductBOImpl implements ProductBO {
 
     @Override
     public boolean addProduct(ProductDTO dto) throws SQLException, ClassNotFoundException {
-        return productDAO.add(new Product(dto.getId(),dto.getQuntity(), dto.getPaddyQun(), dto.getType(),dto.getManufact(),dto.getExpire(),dto.getSid()));
+        return productDAO.add(new Product(
+                dto.getId(),
+                dto.getQuntity(),
+                dto.getPaddyQun(),
+                dto.getType(),
+                dto.getManufact(),
+                dto.getExpire(),
+                dto.getSid()));
     }
 
     @Override
@@ -40,12 +47,12 @@ public class ProductBOImpl implements ProductBO {
     }
 
     @Override
-    public boolean deleteUser(String id) throws SQLException, ClassNotFoundException {
-        return false;
+    public boolean deleteProduct(String id) throws SQLException, ClassNotFoundException {
+        return productDAO.delete(id);
     }
 
     @Override
-    public String generateNewUserID() throws SQLException, ClassNotFoundException {
-        return null;
+    public String generateNewProductID() throws SQLException, ClassNotFoundException {
+        return productDAO.generateNewID();
     }
 }

@@ -14,35 +14,25 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import lk.ijse.millmaster.bo.BOFactory;
 import lk.ijse.millmaster.bo.Custom.ProductBO;
+import lk.ijse.millmaster.dao.Custom.ProductDAO;
+import lk.ijse.millmaster.dao.DAOFactory;
 import lk.ijse.millmaster.dto.PaddyStorage;
 import lk.ijse.millmaster.dto.ProductDTO;
 import lk.ijse.millmaster.dto.tm.ProductTM;
 import lk.ijse.millmaster.model.PaddyStorageModel;
-import lk.ijse.millmaster.model.ProductModel;
 import lk.ijse.millmaster.util.Regex;
 import lk.ijse.millmaster.util.TextFilds;
 import lombok.SneakyThrows;
 
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
 public class ManageProductFormController implements Initializable {
-    private final static String URL = "jdbc:mysql://localhost:3306/Millmaster";
-    private final static Properties props = new Properties();
-
-    static{
-        props.setProperty("user", "root");
-        props.setProperty("password", "12345678");
-    }
 
     public DatePicker txtManufactureDate;
     public DatePicker txtExpireDate;
@@ -89,6 +79,7 @@ public class ManageProductFormController implements Initializable {
     ObservableList<ProductTM> observableList;
 
     ProductBO productBO = (ProductBO) BOFactory.getBoFactory().getBO(BOFactory.BOTypes.PRODUCT);
+    ProductDAO productDAO = (ProductDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.PRODUCT);
 
     @SneakyThrows
     @Override
@@ -102,19 +93,14 @@ public class ManageProductFormController implements Initializable {
         loadStockID();
     }
 
-    private void loadStockID() {
-        try{
-            List<String> id = PaddyStorageModel.getStockID();
-            ObservableList<String> obList = FXCollections.observableArrayList();
+    private void loadStockID() throws SQLException {
+        List<String> id = productDAO.loadStockID();
+        ObservableList<String> obList = FXCollections.observableArrayList();
 
-            for (String un : id){
-                obList.add(un);
-            }
-            comStockID.setItems(obList);
-        }catch (SQLException e){
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
+        for (String un : id){
+            obList.add(un);
         }
+        comStockID.setItems(obList);
     }
 
     @FXML
@@ -123,21 +109,15 @@ public class ManageProductFormController implements Initializable {
     }
 
     @FXML
-    void btnDeleteOnAction(ActionEvent event) throws SQLException {
+    void btnDeleteOnAction(ActionEvent event) throws SQLException, ClassNotFoundException {
         ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
         ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
         Optional<ButtonType> result = new Alert(Alert.AlertType.INFORMATION, "Are you sure to remove?", yes, no).showAndWait();
 
-        if (result.orElse(no) == yes) {
-            try (Connection con = DriverManager.getConnection(URL, props)) {
-                String sql = "DELETE FROM production WHERE Product_ID = ?";
-                PreparedStatement pstm = con.prepareStatement(sql);
-                pstm.setString(1, txtProductID.getText());
-                pstm.executeUpdate();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
+        if(!productBO.deleteProduct(txtProductID.getText())){
+            new Alert(Alert.AlertType.ERROR,"SQL Error !").show();
         }
+
         getAll();
         Clear();
         generateNextProductID();
@@ -219,7 +199,7 @@ public class ManageProductFormController implements Initializable {
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
         } catch (ClassNotFoundException e) {
-            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+            throw new RuntimeException(e);
         }
     }
 
@@ -236,7 +216,7 @@ public class ManageProductFormController implements Initializable {
     @FXML
     void btnUpdateOnAction(ActionEvent event) throws SQLException, ClassNotFoundException {
         if (!isValidated()){
-            new Alert(Alert.AlertType.ERROR,"Pleace Check TextFilds !").show();
+            new Alert(Alert.AlertType.ERROR,"Please Check TextFilds !").show();
             return;
         }
 
@@ -250,18 +230,6 @@ public class ManageProductFormController implements Initializable {
 
         if (!productBO.updateProduct(new ProductDTO(id,quntity,paddyQun,paddyType,manufactureDate,expireDate,Sid))) {
             new Alert(Alert.AlertType.ERROR,"SQL Error !!").show();
-            /*String sql = "UPDATE Production SET Product_Quntity = ?, Product_Type=?, Product_Manufact=?, Product_Expire=? WHERE Product_ID = ?";
-
-            PreparedStatement pstm = con.prepareStatement(sql);
-            pstm.setString(1, quntity);
-            pstm.setString(2, paddyType);
-            pstm.setString(3, manufactureDate);
-            pstm.setString(4, expireDate);
-            pstm.setString(5, id);
-
-            if (pstm.executeUpdate() > 0) {
-                new Alert(Alert.AlertType.CONFIRMATION, "Product Updated!!").show();
-            }*/
         }else {
             new Alert(Alert.AlertType.CONFIRMATION,"Update Complete !").show();
         }
@@ -284,13 +252,9 @@ public class ManageProductFormController implements Initializable {
         txtExpireDate.setValue(LocalDate.parse(colExpireDate.getCellData(index).toString()));
     }
 
-    private void generateNextProductID() {
-        try {
-            String nextId = ProductModel.generateNextOrderId();
-            lblProductID.setText(nextId);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    private void generateNextProductID() throws SQLException, ClassNotFoundException {
+        String nextId = productBO.generateNewProductID();
+        lblProductID.setText(nextId);
     }
 
     void Clear(){
