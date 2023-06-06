@@ -314,4 +314,8 @@ public class ManageProductFormController implements Initializable {
         if (!Regex.setTextColor(TextFilds.INT,txtPaddyQuntity)) return false;
         return true;
     }
+
+    public void OnMouseClicktxtSearchProduct(MouseEvent mouseEvent) {
+        searchFilter();
+    }
 }
