@@ -1,14 +1,12 @@
 package lk.ijse.millmaster.model;
 
 import lk.ijse.millmaster.db.DBConnection;
-import lk.ijse.millmaster.dto.Assest;
 import lk.ijse.millmaster.dto.Order;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 

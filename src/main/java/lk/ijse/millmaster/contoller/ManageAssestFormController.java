@@ -11,10 +11,16 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
-import lk.ijse.millmaster.dto.Assest;
+import lk.ijse.millmaster.bo.BOFactory;
+import lk.ijse.millmaster.bo.Custom.AssestBO;
+import lk.ijse.millmaster.bo.Custom.UserBO;
+import lk.ijse.millmaster.dao.Custom.AssestDAO;
+import lk.ijse.millmaster.dao.DAOFactory;
+import lk.ijse.millmaster.dto.AssestDTO;
+import lk.ijse.millmaster.dto.ProductDTO;
 import lk.ijse.millmaster.dto.UserDTO;
 import lk.ijse.millmaster.dto.tm.AssestTM;
+import lk.ijse.millmaster.dto.tm.ProductTM;
 import lk.ijse.millmaster.model.AssestModel;
 import lk.ijse.millmaster.model.UserModel;
 import lk.ijse.millmaster.util.Regex;
@@ -29,14 +35,6 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public class ManageAssestFormController implements Initializable {
-    private final static String URL = "jdbc:mysql://localhost:3306/Millmaster";
-    private final static Properties props = new Properties();
-
-    static{
-        props.setProperty("user", "root");
-        props.setProperty("password", "12345678");
-    }
-
     public AnchorPane ManageAssestForm;
     public JFXTextField txtQuntity;
     public Label lblUserName;
@@ -62,23 +60,11 @@ public class ManageAssestFormController implements Initializable {
     private JFXTextField txtName;
 
     @FXML
-    private Button btnSave;
-
-    @FXML
-    private Button btnDelete;
-
-    @FXML
-    private Button btnUpdate;
-
-    @FXML
-    private Button btnClear;
-
-    @FXML
-    private VBox SearchBarVBox;
-
-    @FXML
     private JFXTextField txtSearchAssest;
     ObservableList<AssestTM> observableList;
+
+    AssestBO assestBO = (AssestBO) BOFactory.getBoFactory().getBO(BOFactory.BOTypes.ASSEST);
+    AssestDAO assestDAO = (AssestDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.ASSEST);
 
     @SneakyThrows
     @Override
@@ -89,13 +75,9 @@ public class ManageAssestFormController implements Initializable {
         generateNextAssestID();
     }
 
-    private void generateNextAssestID() {
-        try {
-            String nextId = AssestModel.generateNextAssestId();
-            lblAssestID.setText(nextId);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    private void generateNextAssestID() throws SQLException, ClassNotFoundException {
+        String nextId = assestBO.generateNewAssestID();
+        lblAssestID.setText(nextId);
     }
 
     public void rowOnMouseClicked(javafx.scene.input.MouseEvent mouseEvent) {
@@ -113,62 +95,46 @@ public class ManageAssestFormController implements Initializable {
         txtSearchAssest.setOnKeyReleased(e->{
             txtSearchAssest.textProperty().addListener((observableValue, oldValue, newValue) -> {
                 filterData.setPredicate((Predicate<? super AssestTM>) assest->{
-                    if (newValue.isEmpty() || newValue.isBlank() || newValue == null){
+                    if (newValue.isEmpty() || newValue.isBlank()){
                         return true;
                     }
                     String searchKeyword = newValue.toLowerCase();
-                    if (assest.getName().toLowerCase().indexOf(searchKeyword) > -1){
+                    if (assest.getId().toLowerCase().contains(searchKeyword)){
                         return true;
-                    }else if(assest.getId().toLowerCase().indexOf(searchKeyword) > -1){
+                    }else if(assest.getName().toLowerCase().contains(searchKeyword)){
+                        return true;
+                    }else if(assest.getUserID().toLowerCase().contains(searchKeyword)){
                         return true;
                     }
                     return false;
                 });
             });
 
-            SortedList<AssestTM> buyer = new SortedList<>(filterData);
-            buyer.comparatorProperty().bind(tblAssest.comparatorProperty());
-            tblAssest.setItems(buyer);
+            SortedList<AssestTM> assests = new SortedList<>(filterData);
+            assests.comparatorProperty().bind(tblAssest.comparatorProperty());
+            tblAssest.setItems(assests);
         });
     }
 
 
-    public void btnSaveOnAction(javafx.event.ActionEvent actionEvent) throws SQLException {
-        if (!isValidated()){
-            new Alert(Alert.AlertType.ERROR,"Pleace Check TextFilds !").show();
+    public void btnSaveOnAction(javafx.event.ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
+        if (!isValidated()) {
+            new Alert(Alert.AlertType.ERROR, "Pleace Check TextFilds !").show();
             return;
         }
+        String Uid = assestDAO.searchByName(lblUserName.getText());
+        lblUserID.setText(Uid);
 
-        try {
-            UserDTO user = UserModel.searchByName(lblUserName.getText());
-            fillItemFields(user);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "SQL Error!").show();
-        }
         String id = lblAssestID.getText();
         String name = txtName.getText();
         int quntity = Integer.parseInt(txtQuntity.getText());
 
-
-        try(Connection con = DriverManager.getConnection(URL,props)){
-            String sql = "INSERT INTO assest(assest_ID , assest_Name, assest_quntity,User_ID) VALUES(?,?,?,?)";
-
-            PreparedStatement pstm = con.prepareStatement(sql);
-            pstm.setString(1,id);
-            pstm.setString(2,name);
-            pstm.setString(3, String.valueOf(quntity));
-            pstm.setString(4,lblUserID.getText());
-
-            try {
-                int affectedRows = pstm.executeUpdate();
-                if (affectedRows > 0) {
-                    new Alert(Alert.AlertType.CONFIRMATION, "Assest Added !!").show();
-                }
-            }catch (Exception ex){
-                new Alert(Alert.AlertType.CONFIRMATION, "This ID has been previously used!!").show();
-            }
+        if (assestBO.addAssest(new AssestDTO(id,name,quntity,lblUserID.getText()))){
+            new Alert(Alert.AlertType.CONFIRMATION, "Assest Saved !").show();
+        }else{
+            new Alert(Alert.AlertType.ERROR, "SQL Error !").show();
         }
+
         txtID.setText("");
         txtName.setText("");
         txtQuntity.setText("");
@@ -176,16 +142,12 @@ public class ManageAssestFormController implements Initializable {
         getAll();
     }
 
-    private void fillItemFields(UserDTO user) {
-        lblUserID.setText(user.getId());
-    }
-
     void getAll() throws SQLException {
-        try{
+        /*try{
             observableList = FXCollections.observableArrayList();
-            List<Assest> assestList = AssestModel.getAll();
+            List<AssestDTO> assestList = AssestModel.getAll();
 
-            for (Assest assest : assestList){
+            for (AssestDTO assest : assestList){
                 observableList.add(new AssestTM(
                         assest.getId(),
                         assest.getName(),
@@ -195,9 +157,23 @@ public class ManageAssestFormController implements Initializable {
             }
 
             tblAssest.setItems(observableList);
-        }catch (SQLException e){
+        } catch (SQLException e){
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Query Error!!").show();
+        }*/
+
+        try {
+            observableList = FXCollections.observableArrayList();
+            List<AssestDTO> allAssests = assestBO.getAllAssest();
+
+            for (AssestDTO a : allAssests) {
+                observableList.add(new AssestTM(a.getId(), a.getName(),a.getQun(),a.getUserID()));
+            }
+            tblAssest.setItems(observableList);
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -215,15 +191,11 @@ public class ManageAssestFormController implements Initializable {
         Optional<ButtonType> result = new Alert(Alert.AlertType.INFORMATION, "Are you sure to remove?", yes, no).showAndWait();
 
         if (result.orElse(no) == yes) {
-            try (Connection con = DriverManager.getConnection(URL, props)) {
-                String sql = "DELETE FROM assest WHERE Assest_ID = ?";
-                PreparedStatement pstm = con.prepareStatement(sql);
-                pstm.setString(1, txtID.getText());
-                pstm.executeUpdate();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
+            if(!assestBO.deleteAssest(txtID.getText())){
+                new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
             }
         }
+
         getAll();
         txtID.setText("");
         txtName.setText("");
@@ -237,33 +209,20 @@ public class ManageAssestFormController implements Initializable {
             new Alert(Alert.AlertType.ERROR,"Pleace Check TextFilds !").show();
             return;
         }
-
-        try {
-            UserDTO user = UserModel.searchByName(lblUserName.getText());
-            fillItemFields(user);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "SQL Error!").show();
-        }
+        String Uid = assestDAO.searchByName(lblUserName.getText());
+        lblUserID.setText(Uid);
 
         String id = txtID.getText();
         String name = txtName.getText();
         int qun = Integer.parseInt(txtQuntity.getText());
         String UID = lblUserID.getText();
 
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            String sql = "UPDATE Assest SET Assest_name = ?, Assest_quntity = ?,User_ID = ? WHERE Assest_ID = ?";
-
-            PreparedStatement pstm = con.prepareStatement(sql);
-            pstm.setString(1, name);
-            pstm.setInt(2, qun);
-            pstm.setString(3,UID);
-            pstm.setString(4, id);
-
-            if (pstm.executeUpdate() > 0) {
-                new Alert(Alert.AlertType.CONFIRMATION, "Assest Updated!!").show();
-            }
+        if(assestBO.updateAssest(new AssestDTO(id,name,qun,UID))){
+            new Alert(Alert.AlertType.CONFIRMATION, "Assest Updated !!").show();
+        }else {
+            new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
         }
+
         getAll();
         generateNextAssestID();
     }

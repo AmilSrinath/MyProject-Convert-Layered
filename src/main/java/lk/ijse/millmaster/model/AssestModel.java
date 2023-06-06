@@ -1,7 +1,7 @@
 package lk.ijse.millmaster.model;
 
 import lk.ijse.millmaster.db.DBConnection;
-import lk.ijse.millmaster.dto.Assest;
+import lk.ijse.millmaster.dto.AssestDTO;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -10,15 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class    AssestModel {
-    public static List<Assest> getAll() throws SQLException {
+    public static List<AssestDTO> getAll() throws SQLException {
         Connection con = DBConnection.getInstance().getConnection();
         String sql = "SELECT * FROM assest";
 
-        List<Assest> data = new ArrayList<>();
+        List<AssestDTO> data = new ArrayList<>();
 
         ResultSet resultSet = con.createStatement().executeQuery(sql);
         while (resultSet.next()) {
-            data.add(new Assest(
+            data.add(new AssestDTO(
                     resultSet.getString(1),
                     resultSet.getString(2),
                     resultSet.getInt(3),

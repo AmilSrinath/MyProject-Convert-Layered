@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class Assest {
+public class AssestDTO {
     private String id;
     private String name;
     private int qun;

@@ -189,6 +189,7 @@ public class ManageUserFormController implements Initializable{
                 new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
             }
         }
+
         getAll();
         Clear();
         generateNextUserId();
