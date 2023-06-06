@@ -13,23 +13,14 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import lk.ijse.millmaster.bo.BOFactory;
 import lk.ijse.millmaster.bo.Custom.AssestBO;
-import lk.ijse.millmaster.bo.Custom.UserBO;
 import lk.ijse.millmaster.dao.Custom.AssestDAO;
 import lk.ijse.millmaster.dao.DAOFactory;
 import lk.ijse.millmaster.dto.AssestDTO;
-import lk.ijse.millmaster.dto.ProductDTO;
-import lk.ijse.millmaster.dto.UserDTO;
 import lk.ijse.millmaster.dto.tm.AssestTM;
-import lk.ijse.millmaster.dto.tm.ProductTM;
-import lk.ijse.millmaster.model.AssestModel;
-import lk.ijse.millmaster.model.UserModel;
 import lk.ijse.millmaster.util.Regex;
 import lk.ijse.millmaster.util.TextFilds;
 import lombok.SneakyThrows;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Predicate;
@@ -143,25 +134,6 @@ public class ManageAssestFormController implements Initializable {
     }
 
     void getAll() throws SQLException {
-        /*try{
-            observableList = FXCollections.observableArrayList();
-            List<AssestDTO> assestList = AssestModel.getAll();
-
-            for (AssestDTO assest : assestList){
-                observableList.add(new AssestTM(
-                        assest.getId(),
-                        assest.getName(),
-                        assest.getQun(),
-                        assest.getUserID()
-                ));
-            }
-
-            tblAssest.setItems(observableList);
-        } catch (SQLException e){
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Query Error!!").show();
-        }*/
-
         try {
             observableList = FXCollections.observableArrayList();
             List<AssestDTO> allAssests = assestBO.getAllAssest();
