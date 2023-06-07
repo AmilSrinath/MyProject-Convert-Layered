@@ -12,10 +12,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
-import lk.ijse.millmaster.dto.Supplier;
+import lk.ijse.millmaster.bo.BOFactory;
+import lk.ijse.millmaster.bo.Custom.SupplierBO;
+import lk.ijse.millmaster.bo.Custom.UserBO;
+import lk.ijse.millmaster.dto.SupplierDTO;
+import lk.ijse.millmaster.dto.UserDTO;
 import lk.ijse.millmaster.dto.tm.SupplierTM;
+import lk.ijse.millmaster.dto.tm.UserTM;
 import lk.ijse.millmaster.model.SupplierModel;
 import lk.ijse.millmaster.util.Regex;
 import lk.ijse.millmaster.util.TextFilds;
@@ -29,21 +32,8 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public class ManageSupplierFormController implements Initializable {
-    private final static String URL = "jdbc:mysql://localhost:3306/Millmaster";
-    private final static Properties props = new Properties();
-
-    static{
-        props.setProperty("user", "root");
-        props.setProperty("password", "12345678");
-    }
-
     public TableView<SupplierTM> tblSupplier;
-    public Label lblTime;
     public Label lblSupplierID;
-
-    @FXML
-    private AnchorPane ManageSupplierForm;
-
 
     @FXML
     private TableColumn<?, ?> colSupplierId;
@@ -67,9 +57,6 @@ public class ManageSupplierFormController implements Initializable {
     private JFXTextField txtSupplierName;
 
     @FXML
-    private VBox SearchBarVBox;
-
-    @FXML
     private JFXTextField txtSearchBuyer;
 
     @FXML
@@ -80,19 +67,9 @@ public class ManageSupplierFormController implements Initializable {
 
     @FXML
     private JFXTextField txtSupplierAddress;
-
-    @FXML
-    private Button btnSave;
-
-    @FXML
-    private Button btnDelete;
-
-    @FXML
-    private Button btnUpdate;
-
-    @FXML
-    private Button btnClear;
     ObservableList<SupplierTM> observableList;
+
+    SupplierBO supplierBO = (SupplierBO) BOFactory.getBoFactory().getBO(BOFactory.BOTypes.SUPPLIER);
 
     @SneakyThrows
     @Override
@@ -115,36 +92,24 @@ public class ManageSupplierFormController implements Initializable {
         txtSupplierAddress.setText(colSupplierAddress.getCellData(index).toString());
     }
 
-    public void btnSaveOnAction(ActionEvent actionEvent) throws SQLException {
+    public void btnSaveOnAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         if (!isValidated()){
             new Alert(Alert.AlertType.ERROR,"Pleace Check TextFilds !").show();
             return;
         }
 
+        String id = lblSupplierID.getText();
         String name = txtSupplierName.getText();
         String contact = txtSupplierContact.getText();
         String nic = txtSupplierNIC.getText();
         String address = txtSupplierAddress.getText();
 
-        try(Connection con = DriverManager.getConnection(URL,props)){
-            String sql = "INSERT INTO supplier(supplier_ID , supplier_Name, supplier_Contact,supplier_nic,supplier_Address) VALUES(?,?,?,?,?)";
-
-            PreparedStatement pstm = con.prepareStatement(sql);
-            pstm.setString(1,lblSupplierID.getText());
-            pstm.setString(2,name);
-            pstm.setString(3,contact);
-            pstm.setString(4,nic);
-            pstm.setString(5,address);
-
-            try {
-                int affectedRows = pstm.executeUpdate();
-                if (affectedRows > 0) {
-                    new Alert(Alert.AlertType.CONFIRMATION, "Assest Added !!").show();
-                }
-            }catch (Exception ex){
-                new Alert(Alert.AlertType.CONFIRMATION, "This ID has been previously used!!").show();
-            }
+        if (supplierBO.addSupplier(new SupplierDTO(id,name,contact,nic,address))){
+            new Alert(Alert.AlertType.CONFIRMATION, "Supplier Added !!").show();
+        }else {
+            new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
         }
+
         txtSupplierID.setText("");
         txtSupplierName.setText("");
         txtSupplierContact.setText("");
@@ -184,18 +149,12 @@ public class ManageSupplierFormController implements Initializable {
         });
     }
 
-    void getAll() throws SQLException {
+    void getAll() throws SQLException, ClassNotFoundException {
         observableList = FXCollections.observableArrayList();
-        List<Supplier> supplierList = SupplierModel.getAll();
+        List<SupplierDTO> allCustomers = supplierBO.getAllSupplier();
 
-        for ( Supplier supplier: supplierList){
-            observableList.add(new SupplierTM(
-                    supplier.getId(),
-                    supplier.getName(),
-                    supplier.getContact(),
-                    supplier.getNic(),
-                    supplier.getAddress()
-            ));
+        for (SupplierDTO s : allCustomers) {
+            observableList.add(new SupplierTM(s.getId(), s.getName(), s.getContact(),s.getNic(),s.getAddress()));
         }
         tblSupplier.setItems(observableList);
     }
@@ -208,13 +167,9 @@ public class ManageSupplierFormController implements Initializable {
         colSupplierAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
     }
 
-    private void generateNextSupplierID() {
-        try {
-            String nextId = SupplierModel.generateNextOrderId();
-            lblSupplierID.setText(nextId);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    private void generateNextSupplierID() throws ClassNotFoundException, SQLException {
+        String nextId = supplierBO.generateNewSupplierID();
+        lblSupplierID.setText(nextId);
     }
 
     @SneakyThrows
@@ -223,16 +178,10 @@ public class ManageSupplierFormController implements Initializable {
         ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
         Optional<ButtonType> result = new Alert(Alert.AlertType.INFORMATION, "Are you sure to remove?", yes, no).showAndWait();
 
-        if (result.orElse(no) == yes) {
-            try (Connection con = DriverManager.getConnection(URL, props)) {
-                String sql = "DELETE FROM Supplier WHERE Supplier_ID = ?";
-                PreparedStatement pstm = con.prepareStatement(sql);
-                pstm.setString(1, txtSupplierID.getText());
-                pstm.executeUpdate();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
+        if (!supplierBO.deleteSupplier(txtSupplierID.getText())){
+            new Alert(Alert.AlertType.ERROR,"SQL Error !!").show();
         }
+
         getAll();
         generateNextSupplierID();
         txtSupplierID.setText("");
@@ -242,7 +191,7 @@ public class ManageSupplierFormController implements Initializable {
         txtSupplierAddress.setText("");
     }
 
-    public void btnUpdateOnAction(ActionEvent actionEvent) throws SQLException {
+    public void btnUpdateOnAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         if (!isValidated()){
             new Alert(Alert.AlertType.ERROR,"Pleace Check TextFilds !").show();
             return;
@@ -254,20 +203,12 @@ public class ManageSupplierFormController implements Initializable {
         String nic = txtSupplierNIC.getText();
         String address = txtSupplierAddress.getText();
 
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            String sql = "UPDATE Supplier SET Supplier_Name = ?, Supplier_Contact = ?, Supplier_NIC=?, Supplier_Address=? WHERE Supplier_ID = ?";
-
-            PreparedStatement pstm = con.prepareStatement(sql);
-            pstm.setString(1, name);
-            pstm.setString(2, contact);
-            pstm.setString(3, nic);
-            pstm.setString(4, address);
-            pstm.setString(5, id);
-
-            if (pstm.executeUpdate() > 0) {
-                new Alert(Alert.AlertType.CONFIRMATION, "Buyer Updated!!").show();
-            }
+        if (supplierBO.updateSupplier(new SupplierDTO(id,name,contact,nic,address))){
+            new Alert(Alert.AlertType.CONFIRMATION,"Supplier Updated !!").show();
+        }else {
+            new Alert(Alert.AlertType.ERROR,"SQL Error !!").show();
         }
+
         txtSupplierID.setText("");
         txtSupplierName.setText("");
         txtSupplierContact.setText("");

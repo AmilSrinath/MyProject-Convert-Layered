@@ -1,7 +1,7 @@
 package lk.ijse.millmaster.model;
 
 import lk.ijse.millmaster.db.DBConnection;
-import lk.ijse.millmaster.dto.Supplier;
+import lk.ijse.millmaster.dto.SupplierDTO;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -11,15 +11,15 @@ import java.util.List;
 
 public class SupplierModel {
 
-    public static List<Supplier> getAll() throws SQLException {
+    public static List<SupplierDTO> getAll() throws SQLException {
         Connection con = DBConnection.getInstance().getConnection();
         String sql = "SELECT * FROM Supplier";
 
-        List<Supplier> data = new ArrayList<>();
+        List<SupplierDTO> data = new ArrayList<>();
 
         ResultSet resultSet = con.createStatement().executeQuery(sql);
         while (resultSet.next()) {
-            data.add(new Supplier(
+            data.add(new SupplierDTO(
                     resultSet.getString(1),
                     resultSet.getString(2),
                     resultSet.getString(3),
