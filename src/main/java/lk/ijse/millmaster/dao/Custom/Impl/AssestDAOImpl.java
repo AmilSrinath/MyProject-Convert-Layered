@@ -2,9 +2,7 @@ package lk.ijse.millmaster.dao.Custom.Impl;
 
 import lk.ijse.millmaster.dao.Custom.AssestDAO;
 import lk.ijse.millmaster.dao.SQLUtil;
-import lk.ijse.millmaster.dto.AssestDTO;
 import lk.ijse.millmaster.entity.Assest;
-import lk.ijse.millmaster.entity.Product;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

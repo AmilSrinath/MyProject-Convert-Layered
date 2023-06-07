@@ -1,13 +1,12 @@
-package lk.ijse.millmaster.dto;
+package lk.ijse.millmaster.entity;
 
 import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
 @Setter
+@Getter
 @ToString
-
 public class Buyer {
     private String id;
     private String name;
@@ -16,3 +15,4 @@ public class Buyer {
     private String address;
     private String userID;
 }
+

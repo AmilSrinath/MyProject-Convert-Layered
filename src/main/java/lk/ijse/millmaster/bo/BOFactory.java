@@ -1,6 +1,7 @@
 package lk.ijse.millmaster.bo;
 
 import lk.ijse.millmaster.bo.Custom.Impl.AssestBOImpl;
+import lk.ijse.millmaster.bo.Custom.Impl.BuyerBOImpl;
 import lk.ijse.millmaster.bo.Custom.Impl.ProductBOImpl;
 import lk.ijse.millmaster.bo.Custom.Impl.UserBOImpl;
 
@@ -13,7 +14,7 @@ public class BOFactory {
     }
 
     public enum BOTypes{
-        USER,PRODUCT,ASSEST
+        USER,PRODUCT,ASSEST,BUYER
     }
 
     //Object creation logic for BO objects
@@ -25,6 +26,8 @@ public class BOFactory {
                 return new ProductBOImpl();
             case ASSEST:
                 return new AssestBOImpl();
+            case BUYER:
+                return new BuyerBOImpl();
             default:
                 return null;
         }

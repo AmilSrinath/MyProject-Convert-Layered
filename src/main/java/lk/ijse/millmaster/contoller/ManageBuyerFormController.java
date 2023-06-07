@@ -12,11 +12,15 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
-import lk.ijse.millmaster.dto.Buyer;
+import lk.ijse.millmaster.bo.BOFactory;
+import lk.ijse.millmaster.bo.Custom.BuyerBO;
+import lk.ijse.millmaster.bo.Custom.ProductBO;
+import lk.ijse.millmaster.dao.Custom.BuyerDAO;
+import lk.ijse.millmaster.dao.DAOFactory;
+import lk.ijse.millmaster.dto.BuyerDTO;
 import lk.ijse.millmaster.dto.UserDTO;
 import lk.ijse.millmaster.dto.tm.BuyerTM;
+import lk.ijse.millmaster.dto.tm.UserTM;
 import lk.ijse.millmaster.model.BuyerModel;
 import lk.ijse.millmaster.model.UserModel;
 import lk.ijse.millmaster.util.Regex;
@@ -47,9 +51,6 @@ public class ManageBuyerFormController implements Initializable {
     public TableColumn<?, ?> colUserID;
     public Label lblBuyerID;
     @FXML
-    private AnchorPane ManageBuyerForm;
-
-    @FXML
     private TableView<BuyerTM> tblBuyer;
 
     @FXML
@@ -74,9 +75,6 @@ public class ManageBuyerFormController implements Initializable {
     private JFXTextField txtBuyerName;
 
     @FXML
-    private VBox SearchBarVBox;
-
-    @FXML
     private JFXTextField txtSearchBuyer;
 
     @FXML
@@ -88,18 +86,10 @@ public class ManageBuyerFormController implements Initializable {
     @FXML
     private JFXTextField txtBuyerAddress;
 
-    @FXML
-    private Button btnSave;
-
-    @FXML
-    private Button btnDelete;
-
-    @FXML
-    private Button btnUpdate;
-
-    @FXML
-    private Button btnClear;
     ObservableList<BuyerTM> observableList;
+
+    BuyerBO buyerBO = (BuyerBO) BOFactory.getBoFactory().getBO(BOFactory.BOTypes.BUYER);
+    BuyerDAO buyerDAO = (BuyerDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.BUYER);
 
     @SneakyThrows
     @Override
@@ -110,13 +100,9 @@ public class ManageBuyerFormController implements Initializable {
         generateNextBuyerID();
     }
 
-    private void generateNextBuyerID() {
-        try {
-            String nextId = BuyerModel.generateNextBuyerId();
-            lblBuyerID.setText(nextId);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    private void generateNextBuyerID() throws SQLException, ClassNotFoundException {
+        String nextId = buyerBO.generateNewBuyerID();
+        lblBuyerID.setText(nextId);
     }
 
     @SneakyThrows
@@ -150,42 +136,23 @@ public class ManageBuyerFormController implements Initializable {
         });
     }
 
-    public void btnSaveOnAction(javafx.event.ActionEvent actionEvent) throws SQLException {
-        try {
-            UserDTO user = UserModel.searchByName(lblUserName.getText());
-            fillItemFields(user);
-//            txtQty.requestFocus();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "SQL Error!").show();
-        }
-        String id = txtBuyerID.getText();
+    public void btnSaveOnAction(javafx.event.ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
+        String user = buyerDAO.searchByName(lblUserName.getText());
+        lblUserID.setText(user);
+
+        String id = lblBuyerID.getText();
         String name = txtBuyerName.getText();
         String contact = txtBuyerContact.getText();
         String shop = txtBuyerShopName.getText();
         String address = txtBuyerAddress.getText();
+        String uid = lblUserID.getText();
 
-
-        try(Connection con = DriverManager.getConnection(URL,props)){
-            String sql = "INSERT INTO buyer(Buyer_ID , Buyer_Name, Buyer_Cont_Num,Buyer_Shop,Buyer_Address,User_ID) VALUES(?,?,?,?,?,?)";
-
-            PreparedStatement pstm = con.prepareStatement(sql);
-            pstm.setString(1,lblBuyerID.getText());
-            pstm.setString(2,name);
-            pstm.setString(3,contact);
-            pstm.setString(4,shop);
-            pstm.setString(5,address);
-            pstm.setString(6,lblUserID.getText());
-
-            try {
-                int affectedRows = pstm.executeUpdate();
-                if (affectedRows > 0) {
-                    new Alert(Alert.AlertType.CONFIRMATION, "Assest Added !!").show();
-                }
-            }catch (Exception ex){
-                new Alert(Alert.AlertType.CONFIRMATION, "This ID has been previously used!!").show();
-            }
+        if(buyerBO.addBuyer(new BuyerDTO(id,name,contact,shop,address,uid))){
+            new Alert(Alert.AlertType.CONFIRMATION,"Buyer Added !!").show();
+        }else {
+            new Alert(Alert.AlertType.ERROR,"SQL Error").show();
         }
+
         txtBuyerID.setText("");
         txtBuyerName.setText("");
         txtBuyerContact.setText("");
@@ -195,27 +162,14 @@ public class ManageBuyerFormController implements Initializable {
         getAll();
     }
 
-    void getAll() throws SQLException {
-        try{
-            observableList = FXCollections.observableArrayList();
-            List<Buyer> buyerList = BuyerModel.getAll();
+    void getAll() throws SQLException, ClassNotFoundException {
+        observableList = FXCollections.observableArrayList();
+        List<BuyerDTO> allCustomers = buyerBO.getAllBuyer();
 
-            for ( Buyer buyer: buyerList){
-                observableList.add(new BuyerTM(
-                        buyer.getId(),
-                        buyer.getName(),
-                        buyer.getContact(),
-                        buyer.getShopName(),
-                        buyer.getAddress(),
-                        buyer.getUserID()
-                ));
-            }
-
-            tblBuyer.setItems(observableList);
-        }catch (SQLException e){
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Query Error!!").show();
+        for (BuyerDTO b : allCustomers) {
+            observableList.add(new BuyerTM(b.getId(), b.getName(), b.getContact(),b.getShopName(),b.getAddress(),b.getUserID()));
         }
+        tblBuyer.setItems(observableList);
     }
 
     void setCellValueFactory(){
@@ -227,10 +181,6 @@ public class ManageBuyerFormController implements Initializable {
         colUserID.setCellValueFactory(new PropertyValueFactory<>("userID"));
     }
 
-    private void fillItemFields(UserDTO user) {
-        lblUserID.setText(user.getId());
-    }
-
     @SneakyThrows
     public void btnDeleteOnAction(ActionEvent actionEvent) {
         ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
@@ -238,13 +188,8 @@ public class ManageBuyerFormController implements Initializable {
         Optional<ButtonType> result = new Alert(Alert.AlertType.INFORMATION, "Are you sure to remove?", yes, no).showAndWait();
 
         if (result.orElse(no) == yes) {
-            try (Connection con = DriverManager.getConnection(URL, props)) {
-                String sql = "DELETE FROM buyer WHERE Buyer_ID = ?";
-                PreparedStatement pstm = con.prepareStatement(sql);
-                pstm.setString(1, txtBuyerID.getText());
-                pstm.executeUpdate();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
+            if (!buyerBO.deleteBuyer(txtBuyerID.getText())){
+                new Alert(Alert.AlertType.ERROR, "SQL Error!!").show();
             }
         }
         getAll();
@@ -256,27 +201,23 @@ public class ManageBuyerFormController implements Initializable {
         txtBuyerShopName.setText("");
     }
 
-    public void btnUpdateOnAction(ActionEvent actionEvent) throws SQLException {
+    public void btnUpdateOnAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         String id = txtBuyerID.getText();
         String name = txtBuyerName.getText();
         String contact = txtBuyerContact.getText();
         String shop = txtBuyerShopName.getText();
         String address = txtBuyerAddress.getText();
+        String uid = lblUserID.getText();
 
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            String sql = "UPDATE Buyer SET Buyer_Name = ?, Buyer_Cont_Num = ?, Buyer_Shop=?, Buyer_Address=? WHERE Buyer_ID = ?";
+        String user = buyerDAO.searchByName(lblUserName.getText());
+        lblUserID.setText(user);
 
-            PreparedStatement pstm = con.prepareStatement(sql);
-            pstm.setString(1, name);
-            pstm.setString(2, contact);
-            pstm.setString(3, shop);
-            pstm.setString(4, address);
-            pstm.setString(5, id);
-
-            if (pstm.executeUpdate() > 0) {
-                new Alert(Alert.AlertType.CONFIRMATION, "Buyer Updated!!").show();
-            }
+        if (buyerBO.updateBuyer(new BuyerDTO(id,name,contact,shop,address,uid))){
+            new Alert(Alert.AlertType.CONFIRMATION, "Buyer Updated !!").show();
+        }else {
+            new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
         }
+
         txtBuyerID.setText("");
         txtBuyerName.setText("");
         txtBuyerContact.setText("");
@@ -333,5 +274,9 @@ public class ManageBuyerFormController implements Initializable {
         if (!Regex.setTextColor(TextFilds.NAME,txtBuyerShopName))return false;
         if (!Regex.setTextColor(TextFilds.PHONE,txtBuyerContact))return false;
         return true;
+    }
+
+    public void OnMouseClicktxtSearchBuyer(MouseEvent mouseEvent) {
+        searchFilter();
     }
 }

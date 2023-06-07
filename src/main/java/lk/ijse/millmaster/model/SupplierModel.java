@@ -1,7 +1,6 @@
 package lk.ijse.millmaster.model;
 
 import lk.ijse.millmaster.db.DBConnection;
-import lk.ijse.millmaster.dto.Buyer;
 import lk.ijse.millmaster.dto.Supplier;
 
 import java.sql.Connection;
