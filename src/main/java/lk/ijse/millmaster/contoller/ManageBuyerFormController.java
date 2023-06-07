@@ -38,14 +38,6 @@ import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
 public class ManageBuyerFormController implements Initializable {
-    private final static String URL = "jdbc:mysql://localhost:3306/Millmaster";
-    private final static Properties props = new Properties();
-
-    static{
-        props.setProperty("user", "root");
-        props.setProperty("password", "12345678");
-    }
-
     public javafx.scene.control.Label lblUserName;
     public Label lblUserID;
     public TableColumn<?, ?> colUserID;
