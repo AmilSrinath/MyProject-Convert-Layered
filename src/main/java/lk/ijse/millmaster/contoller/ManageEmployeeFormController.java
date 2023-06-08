@@ -15,21 +15,22 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import lk.ijse.millmaster.dto.Employee;
-import lk.ijse.millmaster.dto.UserDTO;
+import lk.ijse.millmaster.bo.BOFactory;
+import lk.ijse.millmaster.bo.Custom.EmployeeBO;
+import lk.ijse.millmaster.dao.Custom.EmployeeDAO;
+import lk.ijse.millmaster.dao.DAOFactory;
+import lk.ijse.millmaster.dto.AssestDTO;
+import lk.ijse.millmaster.dto.EmployeeDTO;
+import lk.ijse.millmaster.dto.tm.AssestTM;
 import lk.ijse.millmaster.dto.tm.EmployeeTM;
 import lk.ijse.millmaster.model.EmployeeModel;
-import lk.ijse.millmaster.model.UserModel;
 import lk.ijse.millmaster.util.Regex;
 import lk.ijse.millmaster.util.TextFilds;
+import lombok.SneakyThrows;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -38,14 +39,6 @@ import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
 public class ManageEmployeeFormController implements Initializable {
-    private final static String URL = "jdbc:mysql://localhost:3306/Millmaster";
-    private final static Properties props = new Properties();
-
-    static{
-        props.setProperty("user", "root");
-        props.setProperty("password", "12345678");
-    }
-
     public Label lblUserName;
     public Label lblUserID;
     public TableView<EmployeeTM> tblEmployee;
@@ -53,8 +46,6 @@ public class ManageEmployeeFormController implements Initializable {
     public Button btnAttendance;
     public Label lblEmployeeID;
     public Label lblError;
-    @FXML
-    private AnchorPane ManageEmployeeForm;
 
     @FXML
     private TableColumn<?, ?> colEmpID;
@@ -81,9 +72,6 @@ public class ManageEmployeeFormController implements Initializable {
     private JFXTextField txtName;
 
     @FXML
-    private VBox SearchBarVBox;
-
-    @FXML
     private JFXTextField txtSearchEmployee;
 
     @FXML
@@ -96,21 +84,12 @@ public class ManageEmployeeFormController implements Initializable {
     private JFXTextField txtSalary;
 
     @FXML
-    private Button btnSave;
-
-    @FXML
-    private Button btnDelete;
-
-    @FXML
-    private Button btnUpdate;
-
-    @FXML
-    private Button btnClear;
-
-    @FXML
     private JFXTextField txtContact;
     ObservableList<EmployeeTM> observableList;
 
+    EmployeeBO employeeBO = (EmployeeBO) BOFactory.getBoFactory().getBO(BOFactory.BOTypes.EMPLYOEE);
+    EmployeeDAO employeeDAO = (EmployeeDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.EMPLYOEE);
+    @SneakyThrows
     @Override
     public void initialize(java.net.URL url, ResourceBundle resourceBundle) {
         getAll();
@@ -130,21 +109,15 @@ public class ManageEmployeeFormController implements Initializable {
     }
 
     @FXML
-    void btnDeleteOnAction(ActionEvent event) {
+    void btnDeleteOnAction(ActionEvent event) throws SQLException, ClassNotFoundException {
         ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
         ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
         Optional<ButtonType> result = new Alert(Alert.AlertType.INFORMATION, "Are you sure to remove?", yes, no).showAndWait();
 
-        if (result.orElse(no) == yes) {
-            try (Connection con = DriverManager.getConnection(URL, props)) {
-                String sql = "DELETE FROM employee WHERE Emp_ID = ?";
-                PreparedStatement pstm = con.prepareStatement(sql);
-                pstm.setString(1, txtID.getText());
-                pstm.executeUpdate();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
+        if (!employeeBO.deleteEmployee(txtID.getText())){
+            new Alert(Alert.AlertType.ERROR,"SQL Error !!").show();
         }
+
         getAll();
         generateNextEmployeeID();
         txtID.setText("");
@@ -185,58 +158,34 @@ public class ManageEmployeeFormController implements Initializable {
         });
     }
 
-    private void generateNextEmployeeID() {
-        try {
-            String nextId = EmployeeModel.generateNextOrderId();
-            lblEmployeeID.setText(nextId);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    private void generateNextEmployeeID() throws ClassNotFoundException, SQLException {
+        String nextId = employeeBO.generateNewEmployeeID();
+        lblEmployeeID.setText(nextId);
     }
 
     @FXML
-    void btnSaveOnAction(ActionEvent event) throws SQLException {
+    void btnSaveOnAction(ActionEvent event) throws SQLException, ClassNotFoundException {
         if (!isValidated()){
             new Alert(Alert.AlertType.ERROR,"Pleace Check TextFilds !").show();
             return;
         }
-        try {
-            UserDTO user = UserModel.searchByName(lblUserName.getText());
-            fillItemFields(user);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "SQL Error!").show();
-        }
+        String user = employeeDAO.searchByName(lblUserName.getText());
+        lblUserID.setText(user);
 
-        String id = txtID.getText();
+        String id = lblEmployeeID.getText();
         String name = txtName.getText();
         String address = txtAddress.getText();
         String nic = txtNIC.getText();
-        String salary = txtSalary.getText();
+        double salary = Double.parseDouble(txtSalary.getText());
         String contact = txtContact.getText();
+        String uid = lblUserID.getText();
 
-
-        try(Connection con = DriverManager.getConnection(URL,props)){
-            String sql = "INSERT INTO employee(Emp_ID , Emp_Name, Emp_Address,Emp_NIC,Salary_Per_Hour,Emp_Contact_No,User_ID) VALUES(?,?,?,?,?,?,?)";
-
-            PreparedStatement pstm = con.prepareStatement(sql);
-            pstm.setString(1,lblEmployeeID.getText());
-            pstm.setString(2,name);
-            pstm.setString(3,address);
-            pstm.setString(4,nic);
-            pstm.setString(5,salary);
-            pstm.setString(6,contact);
-            pstm.setString(7,lblUserID.getText());
-
-            try {
-                int affectedRows = pstm.executeUpdate();
-                if (affectedRows > 0) {
-                    new Alert(Alert.AlertType.CONFIRMATION, "Assest Added !!").show();
-                }
-            }catch (Exception ex){
-                new Alert(Alert.AlertType.CONFIRMATION, "This ID has been previously used!!").show();
-            }
+        if (employeeBO.addEmployee(new EmployeeDTO(id,name,address,nic,salary,contact,uid))){
+            new Alert(Alert.AlertType.CONFIRMATION,"Employee Added !!").show();
+        }else {
+            new Alert(Alert.AlertType.ERROR,"SQL Error !!").show();
         }
+
         txtID.setText("");
         txtName.setText("");
         txtAddress.setText("");
@@ -247,27 +196,14 @@ public class ManageEmployeeFormController implements Initializable {
         getAll();
     }
 
-    private void getAll() {
-        try{
-            observableList = FXCollections.observableArrayList();
-            List<Employee> employees = EmployeeModel.getAll();
+    private void getAll() throws SQLException, ClassNotFoundException {
+        observableList = FXCollections.observableArrayList();
+        List<EmployeeDTO> allEmployee = employeeBO.getAllEmployee();
 
-            for (Employee employee : employees){
-                observableList.add(new EmployeeTM(
-                        employee.getId(),
-                        employee.getName(),
-                        employee.getAddress(),
-                        employee.getNic(),
-                        employee.getSalaryPerHour(),
-                        employee.getContact(),
-                        employee.getUserID()
-                ));
-            }
-            tblEmployee.setItems(observableList);
-        }catch (SQLException e){
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Query Error!!").show();
+        for (EmployeeDTO e : allEmployee) {
+            observableList.add(new EmployeeTM(e.getId(), e.getName(),e.getAddress(),e.getNic(),e.getSalaryPerHour(),e.getContact(),e.getUserID()));
         }
+        tblEmployee.setItems(observableList);
     }
 
     void setCellValueFactory(){
@@ -280,39 +216,30 @@ public class ManageEmployeeFormController implements Initializable {
         colUserID.setCellValueFactory(new PropertyValueFactory<>("userID"));
     }
 
-    private void fillItemFields(UserDTO employee) {
-        lblUserID.setText(employee.getId());
-    }
-
     @FXML
-    void btnUpdateOnAction(ActionEvent event) throws SQLException {
+    void btnUpdateOnAction(ActionEvent event) throws SQLException, ClassNotFoundException {
         if (!isValidated()){
             new Alert(Alert.AlertType.ERROR,"Pleace Check TextFilds !").show();
             return;
         }
 
+        String user = employeeDAO.searchByName(lblUserName.getText());
+        lblUserID.setText(user);
+
         String id = txtID.getText();
         String name = txtName.getText();
         String address = txtAddress.getText();
         String nic = txtNIC.getText();
-        String salary = txtSalary.getText();
+        double salary = Double.parseDouble(txtSalary.getText());
         String contact = txtContact.getText();
+        String userID = lblUserID.getText();
 
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            String sql = "UPDATE Employee SET Emp_Name = ?, Emp_Address = ?, Emp_NIC=?, Salary_Per_Hour=?, Emp_Contact_No=? WHERE Emp_ID = ?";
-
-            PreparedStatement pstm = con.prepareStatement(sql);
-            pstm.setString(1, name);
-            pstm.setString(2, address);
-            pstm.setString(3, nic);
-            pstm.setString(4, salary);
-            pstm.setString(5, contact);
-            pstm.setString(6, id);
-
-            if (pstm.executeUpdate() > 0) {
-                new Alert(Alert.AlertType.CONFIRMATION, "Buyer Updated!!").show();
-            }
+        if(employeeBO.updateEmployee(new EmployeeDTO(id,name,address,nic,salary,contact,userID))){
+            new Alert(Alert.AlertType.CONFIRMATION, "Employee Updated !!").show();
+        }else {
+            new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
         }
+
         txtID.setText("");
         txtName.setText("");
         txtAddress.setText("");

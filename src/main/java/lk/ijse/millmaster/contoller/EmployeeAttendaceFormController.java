@@ -13,10 +13,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import lk.ijse.millmaster.dto.Attendance;
-import lk.ijse.millmaster.dto.Employee;
+import lk.ijse.millmaster.dto.EmployeeDTO;
 import lk.ijse.millmaster.dto.tm.AttendanceTM;
 import lk.ijse.millmaster.model.AttendanceModel;
-import lk.ijse.millmaster.model.EmployeeModel;
 import lombok.SneakyThrows;
 
 import java.net.URL;
@@ -200,7 +199,7 @@ public class EmployeeAttendaceFormController implements Initializable {
         generateNextAttendenceID();
     }
 
-    private void fillItemFields(Employee employee) {
+    private void fillItemFields(EmployeeDTO employee) {
         lblEmpSalaryPerHour.setText(String.valueOf(employee.getSalaryPerHour()));
     }
 

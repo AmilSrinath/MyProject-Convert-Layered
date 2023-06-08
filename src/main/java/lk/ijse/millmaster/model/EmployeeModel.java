@@ -1,7 +1,7 @@
 package lk.ijse.millmaster.model;
 
 import lk.ijse.millmaster.db.DBConnection;
-import lk.ijse.millmaster.dto.Employee;
+import lk.ijse.millmaster.dto.EmployeeDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,15 +12,15 @@ import java.util.List;
 
 public class EmployeeModel {
 
-    public static List<Employee> getAll() throws SQLException {
+    public static List<EmployeeDTO> getAll() throws SQLException {
         Connection con = DBConnection.getInstance().getConnection();
         String sql = "SELECT * FROM employee";
 
-        List<Employee> data = new ArrayList<>();
+        List<EmployeeDTO> data = new ArrayList<>();
 
         ResultSet resultSet = con.createStatement().executeQuery(sql);
         while (resultSet.next()) {
-            data.add(new Employee(
+            data.add(new EmployeeDTO(
                     resultSet.getString(1),
                     resultSet.getString(2),
                     resultSet.getString(3),
@@ -47,7 +47,7 @@ public class EmployeeModel {
         return name;
     }
 
-    public static Employee searchByID(Object selectedItem) throws SQLException {
+    public static EmployeeDTO searchByID(Object selectedItem) throws SQLException {
         String EmpID = (String) selectedItem;
 
         Connection con = DBConnection.getInstance().getConnection();
@@ -58,7 +58,7 @@ public class EmployeeModel {
 
         ResultSet resultSet = pstm.executeQuery();
         if(resultSet.next()) {
-            return new Employee(
+            return new EmployeeDTO(
                     resultSet.getString(1),
                     resultSet.getString(2),
                     resultSet.getString(3),
