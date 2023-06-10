@@ -58,9 +58,6 @@ public class ManagePaddyStorageFormController implements Initializable {
     public TableColumn <?, ?> colStatus;
 
     @FXML
-    private AnchorPane ManagePaddyStorageForm;
-
-    @FXML
     private TableView<PaddyStorageTM> tblPaddyStorage;
 
     public TableColumn <?, ?> colDate;
@@ -96,23 +93,6 @@ public class ManagePaddyStorageFormController implements Initializable {
 
     @FXML
     private JFXTextField txtSector;
-    @FXML
-    private Button btnCalculatePrice;
-
-    @FXML
-    private Button btnDelete;
-
-    @FXML
-    private Button btnUpdate;
-
-    @FXML
-    private Button btnClear;
-
-    @FXML
-    private VBox SearchBarVBox;
-
-    @FXML
-    private JFXTextField txtSearchStorage;
 
     @FXML
     private ComboBox<String> comPaddyType;
@@ -122,9 +102,6 @@ public class ManagePaddyStorageFormController implements Initializable {
 
     @FXML
     private ComboBox<String> comSupplierID;
-
-    @FXML
-    private Button btnAddNewSupplier;
 
     @FXML
     private JFXTextField txtQuntity;
@@ -201,14 +178,15 @@ public class ManagePaddyStorageFormController implements Initializable {
         Optional<ButtonType> result = new Alert(Alert.AlertType.INFORMATION, "Are you sure to remove?", yes, no).showAndWait();
 
         if (result.orElse(no) == yes) {
-            try (Connection con = DriverManager.getConnection(URL, props)) {
+            /*try (Connection con = DriverManager.getConnection(URL, props)) {
                 String sql = "DELETE FROM stock WHERE stock_ID = ?";
                 PreparedStatement pstm = con.prepareStatement(sql);
                 pstm.setString(1, txtStockID.getText());
                 pstm.executeUpdate();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
-            }
+            }*/
+
         }
         getAll();
         Clear();

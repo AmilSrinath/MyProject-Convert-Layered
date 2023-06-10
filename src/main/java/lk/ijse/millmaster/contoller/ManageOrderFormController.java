@@ -16,8 +16,17 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lk.ijse.millmaster.bo.BOFactory;
+import lk.ijse.millmaster.bo.Custom.EmployeeBO;
+import lk.ijse.millmaster.bo.Custom.OrderBO;
+import lk.ijse.millmaster.dao.Custom.OrderDAO;
+import lk.ijse.millmaster.dao.Custom.ProductDAO;
+import lk.ijse.millmaster.dao.DAOFactory;
 import lk.ijse.millmaster.dto.Order;
+import lk.ijse.millmaster.dto.OrderDTO;
+import lk.ijse.millmaster.dto.UserDTO;
 import lk.ijse.millmaster.dto.tm.OrderTM;
+import lk.ijse.millmaster.dto.tm.UserTM;
 import lk.ijse.millmaster.model.BuyerModel;
 import lk.ijse.millmaster.model.OrderModel;
 import lk.ijse.millmaster.model.PaddyStorageModel;
@@ -35,32 +44,15 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 
 public class ManageOrderFormController implements Initializable {
-    private final static String URL = "jdbc:mysql://localhost:3306/Millmaster";
-    private final static Properties props = new Properties();
-
-    static{
-        props.setProperty("user", "root");
-        props.setProperty("password", "12345678");
-    }
-
     public DatePicker txtDate;
     public TableView<OrderTM> tblOrder;
-    public ComboBox comPaddyType;
     public Button btnPlaceOrder;
     public Label lblSelectRow;
     public TableColumn <?, ?> colStatus;
     public Label lblOrderID;
-    @FXML
-    private AnchorPane ManageOrderForm;
-
-    @FXML
-    private TableView<?> tblEmployee;
 
     @FXML
     private TableColumn<?, ?> colOrderID;
-
-    @FXML
-    private TableColumn<?, ?> colOrderQuntity;
 
     @FXML
     private TableColumn<?, ?> colOrderDate;
@@ -72,31 +64,16 @@ public class ManageOrderFormController implements Initializable {
     private JFXTextField txtID;
 
     @FXML
-    private JFXTextField txtQuntity;
-
-    @FXML
-    private VBox SearchBarVBox;
-
-    @FXML
     private JFXTextField txtBuyerID;
-
-    @FXML
-    private Button btnSave;
-
-    @FXML
-    private Button btnDelete;
-
-    @FXML
-    private Button btnUpdate;
-
-    @FXML
-    private Button btnClear;
 
     @FXML
     private ComboBox<String> comBuyerName;
     ObservableList<OrderTM> observableList;
     StackPane controllArea;
     public Label lblActiveOrders;
+
+    OrderBO orderBO = (OrderBO) BOFactory.getBoFactory().getBO(BOFactory.BOTypes.ORDER);
+    OrderDAO orderDAO = (OrderDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.ORDER);
 
     @SneakyThrows
     @Override
@@ -108,13 +85,9 @@ public class ManageOrderFormController implements Initializable {
         generateNextOderID();
     }
 
-    private void generateNextOderID() {
-        try {
-            String nextId = OrderModel.generateNextOrderId();
-            lblOrderID.setText(nextId);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    private void generateNextOderID() throws ClassNotFoundException, SQLException {
+        String nextId = orderBO.generateNewOrderID();
+        lblOrderID.setText(nextId);
     }
 
     @FXML
@@ -123,19 +96,14 @@ public class ManageOrderFormController implements Initializable {
     }
 
     @FXML
-    void btnDeleteOnAction(ActionEvent event) throws SQLException {
+    void btnDeleteOnAction(ActionEvent event) throws SQLException, ClassNotFoundException {
         ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
         ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
         Optional<ButtonType> result = new Alert(Alert.AlertType.INFORMATION, "Are you sure to remove?", yes, no).showAndWait();
 
         if (result.orElse(no) == yes) {
-            try (Connection con = DriverManager.getConnection(URL, props)) {
-                String sql = "DELETE FROM orders WHERE Order_ID = ?";
-                PreparedStatement pstm = con.prepareStatement(sql);
-                pstm.setString(1, txtID.getText());
-                pstm.executeUpdate();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
+            if(!orderBO.deleteOrder(txtID.getText())){
+                new Alert(Alert.AlertType.ERROR,"SQL Error !!").show();
             }
         }
         getAll();
@@ -144,34 +112,20 @@ public class ManageOrderFormController implements Initializable {
     }
 
     @FXML
-    void btnSaveOnAction(ActionEvent event) throws SQLException {
+    void btnSaveOnAction(ActionEvent event) throws SQLException, ClassNotFoundException {
         Object buyerid = comBuyerName.getSelectionModel().getSelectedItem();
         String buyerID = (String) buyerid;
         System.out.println(buyerID);
 
-        String id = txtID.getText();
+        String id = lblOrderID.getText();
         String date = String.valueOf(txtDate.getValue());
 
-        try(Connection con = DriverManager.getConnection(URL,props)){
-            String sql = "INSERT INTO orders(order_ID , order_Date, Buyer_ID, Status) VALUES(?,?,?,?)";
-
-            PreparedStatement pstm = con.prepareStatement(sql);
-            pstm.setString(1,lblOrderID.getText());
-            pstm.setString(2,date);
-            pstm.setString(3,buyerID);
-            pstm.setString(4,"Active");
-
-            try {
-                int affectedRows = pstm.executeUpdate();
-                if (affectedRows > 0) {
-                    tblOrder.refresh();
-                    new Alert(Alert.AlertType.CONFIRMATION, "Order Added !!").show();
-                }
-            }catch (Exception ex){
-                new Alert(Alert.AlertType.ERROR, "This ID has been previously used!!").show();
-                System.out.println(ex);
-            }
+        if(orderBO.addOrder(new OrderDTO(id,date,buyerID,"Active"))){
+            new Alert(Alert.AlertType.CONFIRMATION,"Order Added !!").show();
+        }else {
+            new Alert(Alert.AlertType.ERROR,"SQL Error !!").show();
         }
+
         txtID.setText("");
         txtBuyerID.setText("");
         getAll();
@@ -186,39 +140,28 @@ public class ManageOrderFormController implements Initializable {
         colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
     }
 
-    private void getAll() throws SQLException {
+    private void getAll() throws SQLException, ClassNotFoundException {
         observableList = FXCollections.observableArrayList();
-        List<Order> orders = OrderModel.getAll();
+        List<OrderDTO> allCustomers = orderBO.getAllOrder();
 
-        for (Order order : orders){
-            observableList.add(new OrderTM(
-                    order.getId(),
-                    order.getDate(),
-                    order.getBuyerId(),
-                    order.getStatus()
-            ));
+        for (OrderDTO o : allCustomers) {
+            observableList.add(new OrderTM(o.getId(),o.getDate(),o.getBuyerId(),o.getStatus()));
         }
         tblOrder.setItems(observableList);
     }
 
     @FXML
-    void btnUpdateOnAction(ActionEvent event) throws SQLException {
-        LocalDate value = txtDate.getValue();
+    void btnUpdateOnAction(ActionEvent event) throws SQLException, ClassNotFoundException {
+        String value = String.valueOf(txtDate.getValue());
         String Bid = comBuyerName.getValue();
         String id = txtID.getText();
 
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            String sql = "UPDATE orders SET Order_Date = ?, Buyer_ID = ? WHERE Order_ID = ?";
-
-            PreparedStatement pstm = con.prepareStatement(sql);
-            pstm.setString(1, String.valueOf(value));
-            pstm.setString(2, Bid);
-            pstm.setString(3,id);
-
-            if (pstm.executeUpdate() > 0) {
-                new Alert(Alert.AlertType.CONFIRMATION, "Stock Updated!!").show();
-            }
+        if (orderBO.updateOrder(new OrderDTO(id,value,Bid,"Active"))){
+            new Alert(Alert.AlertType.CONFIRMATION, "Order Updated !!").show();
+        }else{
+            new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
         }
+
         getAll();
         generateNextOderID();
         OrderActive();
@@ -251,7 +194,7 @@ public class ManageOrderFormController implements Initializable {
         }
     }
 
-    public void btnPlaceOrderOnAction(ActionEvent event) throws IOException, SQLException {
+    public void btnPlaceOrderOnAction(ActionEvent event) throws IOException, SQLException, ClassNotFoundException {
         String id = txtID.getText();
         int index = tblOrder.getSelectionModel().getSelectedIndex();
         if (index >= 0) {
@@ -287,21 +230,10 @@ public class ManageOrderFormController implements Initializable {
     }
 
     void OrderActive() throws SQLException {
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            int sum=0;
-            Statement st = con.createStatement();
-            ResultSet resultSet = st.executeQuery("SELECT Count(Status)FROM orders WHERE Status='Active'");
-
-            while (resultSet.next()){
-                int c = resultSet.getInt(1);
-                sum=sum+c;
-            }
-            lblActiveOrders.setText(String.valueOf(sum));
-        }
+        lblActiveOrders.setText(String.valueOf(orderDAO.OrderActive()));
     }
 
     public void setActiveOrders(Label lblActiveOrders) {
         this.lblActiveOrders=lblActiveOrders;
     }
-
 }
