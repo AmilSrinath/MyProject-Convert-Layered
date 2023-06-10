@@ -114,18 +114,19 @@ public class ManageEmployeeFormController implements Initializable {
         ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
         Optional<ButtonType> result = new Alert(Alert.AlertType.INFORMATION, "Are you sure to remove?", yes, no).showAndWait();
 
-        if (!employeeBO.deleteEmployee(txtID.getText())){
-            new Alert(Alert.AlertType.ERROR,"SQL Error !!").show();
+        if (result.orElse(no) == yes) {
+            if (!employeeBO.deleteEmployee(txtID.getText())){
+                new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
+            }
+            txtID.setText("");
+            txtName.setText("");
+            txtAddress.setText("");
+            txtNIC.setText("");
+            txtSalary.setText("");
+            txtContact.setText("");
         }
-
         getAll();
         generateNextEmployeeID();
-        txtID.setText("");
-        txtName.setText("");
-        txtAddress.setText("");
-        txtNIC.setText("");
-        txtSalary.setText("");
-        txtContact.setText("");
     }
 
     private void searchFilter(){
