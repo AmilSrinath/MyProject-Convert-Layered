@@ -2,8 +2,6 @@ package lk.ijse.millmaster.contoller;
 
 import com.jfoenix.controls.JFXTextField;
 import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,14 +14,20 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import lk.ijse.millmaster.bo.BOFactory;
+import lk.ijse.millmaster.bo.Custom.OrderBO;
+import lk.ijse.millmaster.bo.Custom.PaddyStorageBO;
+import lk.ijse.millmaster.dao.Custom.PaddyStorageDAO;
+import lk.ijse.millmaster.dao.Custom.ProductDAO;
+import lk.ijse.millmaster.dao.DAOFactory;
 import lk.ijse.millmaster.db.DBConnection;
-import lk.ijse.millmaster.dto.PaddyStorage;
+import lk.ijse.millmaster.dto.OrderDTO;
+import lk.ijse.millmaster.dto.PaddyStorageDTO;
+import lk.ijse.millmaster.dto.tm.OrderTM;
 import lk.ijse.millmaster.dto.tm.PaddyStorageTM;
 import lk.ijse.millmaster.model.PaddyStorageModel;
 import lk.ijse.millmaster.model.SupplierModel;
-import lk.ijse.millmaster.model.UserModel;
 import lk.ijse.millmaster.util.Regex;
 import lk.ijse.millmaster.util.TextFilds;
 import lombok.SneakyThrows;
@@ -42,14 +46,6 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class ManagePaddyStorageFormController implements Initializable {
-    private final static String URL = "jdbc:mysql://localhost:3306/Millmaster";
-    private final static Properties props = new Properties();
-
-    static{
-        props.setProperty("user", "root");
-        props.setProperty("password", "12345678");
-    }
-
     public Button btnAddPaddy;
     public Label lblTotal;
     public Button btnCreateBill;
@@ -107,6 +103,9 @@ public class ManagePaddyStorageFormController implements Initializable {
     private JFXTextField txtQuntity;
     public StackPane ControllArea;
     ObservableList<PaddyStorageTM> observableList;
+
+    PaddyStorageBO paddyStorageBO = (PaddyStorageBO) BOFactory.getBoFactory().getBO(BOFactory.BOTypes.PADDYSTORAGE);
+    PaddyStorageDAO paddyStorageDAO = (PaddyStorageDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.PADDYSTORAGE);
 
     @SneakyThrows
     @Override
@@ -172,21 +171,15 @@ public class ManagePaddyStorageFormController implements Initializable {
     }
 
     @FXML
-    void btnDeleteOnAction(ActionEvent event) throws SQLException {
+    void btnDeleteOnAction(ActionEvent event) throws SQLException, ClassNotFoundException {
         ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
         ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
         Optional<ButtonType> result = new Alert(Alert.AlertType.INFORMATION, "Are you sure to remove?", yes, no).showAndWait();
 
         if (result.orElse(no) == yes) {
-            /*try (Connection con = DriverManager.getConnection(URL, props)) {
-                String sql = "DELETE FROM stock WHERE stock_ID = ?";
-                PreparedStatement pstm = con.prepareStatement(sql);
-                pstm.setString(1, txtStockID.getText());
-                pstm.executeUpdate();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }*/
-
+            if(!paddyStorageBO.deletePaddyStorage(txtStockID.getText())){
+                new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
+            }
         }
         getAll();
         Clear();
@@ -195,7 +188,7 @@ public class ManagePaddyStorageFormController implements Initializable {
     }
 
     @FXML
-    void btnUpdateOnAction(ActionEvent event) throws SQLException {
+    void btnUpdateOnAction(ActionEvent event) throws SQLException, ClassNotFoundException {
         if (!isValidated()){
             new Alert(Alert.AlertType.WARNING,"Pleace Check TextFilds !").show();
             return;
@@ -207,28 +200,16 @@ public class ManagePaddyStorageFormController implements Initializable {
         Double quntity = Double.valueOf(txtQuntity.getText());
         int NoOfBag = Integer.parseInt(txtNuberOfBag.getText());
         Double UnitPrice = Double.valueOf(txtUnitPrice.getText());
-        LocalDate date = LocalDate.now();
+        String date = String.valueOf(LocalDate.now());
         String sector = txtSector.getText();
         double total = UnitPrice * quntity;
 
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            String sql = "UPDATE stock SET Paddy_Type = ?, Paddy_Quntity = ?, No_Of_Bag = ?, Unit_Price = ?, Date = ?, Sector = ?,Total = ? ,Supplier_ID = ? WHERE Stock_ID = ?";
-
-            PreparedStatement pstm = con.prepareStatement(sql);
-            pstm.setString(1, PaddyType);
-            pstm.setDouble(2, quntity);
-            pstm.setInt(3, NoOfBag);
-            pstm.setDouble(4, UnitPrice);
-            pstm.setString(5, String.valueOf(date));
-            pstm.setString(6, sector);
-            pstm.setDouble(7, total);
-            pstm.setString(8, Suppilerid);
-            pstm.setString(9, Stockid);
-
-            if (pstm.executeUpdate() > 0) {
-                new Alert(Alert.AlertType.CONFIRMATION, "Stock Updated!!").show();
-            }
+        if(paddyStorageBO.updatePaddyStorage(new PaddyStorageDTO(Stockid,PaddyType,quntity,NoOfBag,UnitPrice,date,sector,total,Suppilerid,"Available"))){
+            new Alert(Alert.AlertType.CONFIRMATION, "Paddy Storage Updated !!").show();
+        }else {
+            new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
         }
+
         Clear();
         getAll();
         calculateNetTotal();
@@ -256,21 +237,15 @@ public class ManagePaddyStorageFormController implements Initializable {
     }
 
     public void loadUserNames() throws SQLException {
-        try{
-            List<String> id = SupplierModel.getUserID();
-            ObservableList<String> obList = FXCollections.observableArrayList();
-
-            for (String un : id){
-                obList.add(un);
-            }
-            comSupplierID.setItems(obList);
-        }catch (SQLException e){
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
+        List<String> id = paddyStorageDAO.loadUserNames();
+        ObservableList<String> obList = FXCollections.observableArrayList();
+        for (String un : id){
+            obList.add(un);
         }
+        comSupplierID.setItems(obList);
     }
 
-    public void btnAddPaddyOnAction(ActionEvent event) throws SQLException {
+    public void btnAddPaddyOnAction(ActionEvent event) throws SQLException, ClassNotFoundException {
         if (!isValidated()){
             new Alert(Alert.AlertType.WARNING,"Pleace Check TextFilds !").show();
             return;
@@ -282,35 +257,16 @@ public class ManagePaddyStorageFormController implements Initializable {
         Double quntity = Double.valueOf(txtQuntity.getText());
         int NoOfBag = Integer.parseInt(txtNuberOfBag.getText());
         Double UnitPrice = Double.valueOf(txtUnitPrice.getText());
-        LocalDate date = LocalDate.now();
+        String date = String.valueOf(LocalDate.now());
         String sector = txtSector.getText();
         double total = UnitPrice * quntity;
 
-        try(Connection con = DriverManager.getConnection(URL,props)){
-            String sql = "INSERT INTO stock(stock_ID , paddy_Type, Paddy_Quntity, No_Of_Bag, Unit_Price, Date, Sector, Total, Supplier_ID,Status) VALUES(?,?,?,?,?,?,?,?,?,?)";
-
-            PreparedStatement pstm = con.prepareStatement(sql);
-            pstm.setString(1,Stockid);
-            pstm.setString(2,PaddyType);
-            pstm.setDouble(3,quntity);
-            pstm.setInt(4,NoOfBag);
-            pstm.setDouble(5,UnitPrice);
-            pstm.setString(6, String.valueOf(date));
-            pstm.setString(7, sector);
-            pstm.setDouble(8, total);
-            pstm.setString(9,Suppilerid);
-            pstm.setString(10,"Available");
-
-            try {
-                int affectedRows = pstm.executeUpdate();
-                if (affectedRows > 0) {
-                    tblPaddyStorage.refresh();
-                    new Alert(Alert.AlertType.CONFIRMATION, "Paddy Added !!").show();
-                }
-            }catch (Exception ex){
-                new Alert(Alert.AlertType.CONFIRMATION, "This ID has been previously used!!").show();
-            }
+        if(paddyStorageBO.addPaddyStorage(new PaddyStorageDTO(Stockid,PaddyType,quntity,NoOfBag,UnitPrice,date,sector,total,Suppilerid,"Available"))){
+            new Alert(Alert.AlertType.CONFIRMATION, "Paddy Storage Added !!").show();
+        }else {
+            new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
         }
+
         getAll();
         Clear();
         calculateNetTotal();
@@ -330,30 +286,14 @@ public class ManagePaddyStorageFormController implements Initializable {
         colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
     }
 
-    void getAll() throws SQLException {
-        try{
-            observableList = FXCollections.observableArrayList();
-            List<PaddyStorage> paddyList = PaddyStorageModel.getAll();
+    void getAll() throws SQLException, ClassNotFoundException {
+        observableList = FXCollections.observableArrayList();
+        List<PaddyStorageDTO> allPaddyStorages = paddyStorageBO.getAllPaddyStorages();
 
-            for (PaddyStorage paddyStorage : paddyList){
-                observableList.add(new PaddyStorageTM(
-                        paddyStorage.getId(),
-                        paddyStorage.getPadddyType(),
-                        paddyStorage.getPaddyQuntity(),
-                        paddyStorage.getNoOfBag(),
-                        paddyStorage.getUnitPrice(),
-                        paddyStorage.getDate(),
-                        paddyStorage.getSector(),
-                        paddyStorage.getTotal(),
-                        paddyStorage.getSupplierId(),
-                        paddyStorage.getStatus()
-                ));
-            }
-            tblPaddyStorage.setItems(observableList);
-        }catch (SQLException e){
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Query Error!!").show();
+        for (PaddyStorageDTO p : allPaddyStorages) {
+            observableList.add(new PaddyStorageTM(p.getId(),p.getPaddyType(),p.getPaddyQuntity(),p.getNoOfBag(),p.getUnitPrice(),p.getDate(),p.getSector(),p.getTotal(),p.getSupplierId(),p.getStatus()));
         }
+        tblPaddyStorage.setItems(observableList);
     }
 
     public void btnCreateOnAction(ActionEvent event) throws SQLException, JRException {

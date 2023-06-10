@@ -16,7 +16,7 @@ import lk.ijse.millmaster.bo.BOFactory;
 import lk.ijse.millmaster.bo.Custom.ProductBO;
 import lk.ijse.millmaster.dao.Custom.ProductDAO;
 import lk.ijse.millmaster.dao.DAOFactory;
-import lk.ijse.millmaster.dto.PaddyStorage;
+import lk.ijse.millmaster.dto.PaddyStorageDTO;
 import lk.ijse.millmaster.dto.ProductDTO;
 import lk.ijse.millmaster.dto.tm.ProductTM;
 import lk.ijse.millmaster.model.PaddyStorageModel;
@@ -274,7 +274,7 @@ public class ManageProductFormController implements Initializable {
     void setComStockID(){
         String code = comStockID.getSelectionModel().getSelectedItem();
         try {
-            PaddyStorage paddyStorage = PaddyStorageModel.searchById(code);
+            PaddyStorageDTO paddyStorage = PaddyStorageModel.searchById(code);
             fillItemFields(paddyStorage);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -282,8 +282,8 @@ public class ManageProductFormController implements Initializable {
         }
     }
 
-    private void fillItemFields(PaddyStorage paddyStorage) {
-        lblPaddyType.setText(paddyStorage.getPadddyType());
+    private void fillItemFields(PaddyStorageDTO paddyStorage) {
+        lblPaddyType.setText(paddyStorage.getPaddyType());
         lblQuntity.setText(String.valueOf(paddyStorage.getPaddyQuntity()));
     }
 

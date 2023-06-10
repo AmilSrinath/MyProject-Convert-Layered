@@ -1,7 +1,7 @@
 package lk.ijse.millmaster.model;
 
 import lk.ijse.millmaster.db.DBConnection;
-import lk.ijse.millmaster.dto.PaddyStorage;
+import lk.ijse.millmaster.dto.PaddyStorageDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,15 +12,15 @@ import java.util.List;
 
 public class PaddyStorageModel {
 
-    public static List<PaddyStorage> getAll() throws SQLException {
+    public static List<PaddyStorageDTO> getAll() throws SQLException {
         Connection con = DBConnection.getInstance().getConnection();
         String sql = "SELECT * FROM Stock";
 
-        List<PaddyStorage> data = new ArrayList<>();
+        List<PaddyStorageDTO> data = new ArrayList<>();
 
         ResultSet resultSet = con.createStatement().executeQuery(sql);
         while (resultSet.next()) {
-            data.add(new PaddyStorage(
+            data.add(new PaddyStorageDTO(
                     resultSet.getString(1),
                     resultSet.getString(2),
                     resultSet.getDouble(3),
@@ -81,7 +81,7 @@ public class PaddyStorageModel {
         return ids;
     }
 
-    public static PaddyStorage searchById(String code) throws SQLException {
+    public static PaddyStorageDTO searchById(String code) throws SQLException {
         Connection con = DBConnection.getInstance().getConnection();
         String sql = "SELECT * FROM stock WHERE Stock_ID = ?";
 
@@ -90,7 +90,7 @@ public class PaddyStorageModel {
 
         ResultSet resultSet = pstm.executeQuery();
         if(resultSet.next()) {
-            return new PaddyStorage(
+            return new PaddyStorageDTO(
                     resultSet.getString(1),
                     resultSet.getString(2),
                     resultSet.getDouble(3),

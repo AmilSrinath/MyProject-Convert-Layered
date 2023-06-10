@@ -13,25 +13,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lk.ijse.millmaster.bo.BOFactory;
-import lk.ijse.millmaster.bo.Custom.EmployeeBO;
 import lk.ijse.millmaster.bo.Custom.OrderBO;
 import lk.ijse.millmaster.dao.Custom.OrderDAO;
-import lk.ijse.millmaster.dao.Custom.ProductDAO;
 import lk.ijse.millmaster.dao.DAOFactory;
-import lk.ijse.millmaster.dto.Order;
 import lk.ijse.millmaster.dto.OrderDTO;
-import lk.ijse.millmaster.dto.UserDTO;
 import lk.ijse.millmaster.dto.tm.OrderTM;
-import lk.ijse.millmaster.dto.tm.UserTM;
 import lk.ijse.millmaster.model.BuyerModel;
-import lk.ijse.millmaster.model.OrderModel;
-import lk.ijse.millmaster.model.PaddyStorageModel;
-import lk.ijse.millmaster.util.Regex;
-import lk.ijse.millmaster.util.TextFilds;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
@@ -40,7 +30,6 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.ResourceBundle;
 
 public class ManageOrderFormController implements Initializable {

@@ -45,8 +45,8 @@ public class PlaceOrderModel {
 
             con.setAutoCommit(false);
 
-            boolean isSaved = OrderModel.save(oid);
-            if (isSaved) {
+            //boolean isSaved = OrderModel.save(oid);
+            //if (isSaved) {
                 boolean isUpdated = ProductModel.updateQty(cartDTOList);
                 if (isUpdated) {
                     boolean isOrderDetailSaved = OrderDetailModel.save(oid, cartDTOList);
@@ -55,7 +55,7 @@ public class PlaceOrderModel {
                         return true;
                     }
                 }
-            }
+            //}
             return false;
         } catch (SQLException er) {
             er.printStackTrace();

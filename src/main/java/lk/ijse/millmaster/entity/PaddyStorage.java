@@ -1,7 +1,6 @@
-package lk.ijse.millmaster.dto;
+package lk.ijse.millmaster.entity;
 
 import lombok.*;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -9,7 +8,7 @@ import lombok.*;
 @ToString
 public class PaddyStorage {
     private String id;
-    private String padddyType;
+    private String paddyType;
     private double paddyQuntity;
     private int noOfBag;
     private double unitPrice;

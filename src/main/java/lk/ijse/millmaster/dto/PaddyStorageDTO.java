@@ -1,4 +1,4 @@
-package lk.ijse.millmaster.dto.tm;
+package lk.ijse.millmaster.dto;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class PaddyStorageTM {
+public class PaddyStorageDTO {
     private String id;
     private String paddyType;
     private double paddyQuntity;
