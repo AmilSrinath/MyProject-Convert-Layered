@@ -58,7 +58,26 @@ public class PaddyStorageDAOImpl implements PaddyStorageDAO {
 
     @Override
     public String generateNewID() throws SQLException, ClassNotFoundException {
-        return null;
+        ResultSet rst = SQLUtil.execute("SELECT Stock_ID FROM stock ORDER BY Stock_ID DESC LIMIT 1;");
+        if (rst.next()) {
+            String string=rst.getString(1);
+            String[] strings = string.split("S0");
+            int id = Integer.parseInt(strings[1]);
+            id++;
+            String ID = String.valueOf(id);
+            int length = ID.length();
+            if (length < 2){
+                return "S00"+id;
+            }else {
+                if (length < 3){
+                    return "S0"+id;
+                }else {
+                    return "S"+id;
+                }
+            }
+        } else {
+            return "S001";
+        }
     }
 
     @Override

@@ -16,18 +16,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import lk.ijse.millmaster.bo.BOFactory;
-import lk.ijse.millmaster.bo.Custom.OrderBO;
 import lk.ijse.millmaster.bo.Custom.PaddyStorageBO;
 import lk.ijse.millmaster.dao.Custom.PaddyStorageDAO;
-import lk.ijse.millmaster.dao.Custom.ProductDAO;
 import lk.ijse.millmaster.dao.DAOFactory;
 import lk.ijse.millmaster.db.DBConnection;
-import lk.ijse.millmaster.dto.OrderDTO;
 import lk.ijse.millmaster.dto.PaddyStorageDTO;
-import lk.ijse.millmaster.dto.tm.OrderTM;
 import lk.ijse.millmaster.dto.tm.PaddyStorageTM;
-import lk.ijse.millmaster.model.PaddyStorageModel;
-import lk.ijse.millmaster.model.SupplierModel;
 import lk.ijse.millmaster.util.Regex;
 import lk.ijse.millmaster.util.TextFilds;
 import lombok.SneakyThrows;
@@ -38,9 +32,6 @@ import net.sf.jasperreports.view.JasperViewer;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
@@ -117,7 +108,7 @@ public class ManagePaddyStorageFormController implements Initializable {
         setCellValueFactory();
         calculateNetTotal();
         lblError.setVisible(false);
-        generateNextUserId();
+        generateNextStockId();
     }
 
     private void calculateNetTotal() {
@@ -130,13 +121,9 @@ public class ManagePaddyStorageFormController implements Initializable {
         lblTotal.setText(String.valueOf(netTotal));
     }
 
-    private void generateNextUserId() {
-        try {
-            String nextId = PaddyStorageModel.generateNextOrderId();
-            lblStockID.setText(nextId);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    private void generateNextStockId() throws SQLException, ClassNotFoundException {
+        String nextId = paddyStorageBO.generateNewPaddyStorageID();
+        lblStockID.setText(nextId);
     }
 
     @FXML
@@ -184,7 +171,7 @@ public class ManagePaddyStorageFormController implements Initializable {
         getAll();
         Clear();
         calculateNetTotal();
-        generateNextUserId();
+        generateNextStockId();
     }
 
     @FXML
@@ -213,7 +200,7 @@ public class ManagePaddyStorageFormController implements Initializable {
         Clear();
         getAll();
         calculateNetTotal();
-        generateNextUserId();
+        generateNextStockId();
     }
 
     @FXML
@@ -270,12 +257,12 @@ public class ManagePaddyStorageFormController implements Initializable {
         getAll();
         Clear();
         calculateNetTotal();
-        generateNextUserId();
+        generateNextStockId();
     }
 
     void setCellValueFactory(){
         colStockId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colPaddyType.setCellValueFactory(new PropertyValueFactory<>("padddyType"));
+        colPaddyType.setCellValueFactory(new PropertyValueFactory<>("paddyType"));
         colQuntity.setCellValueFactory(new PropertyValueFactory<>("paddyQuntity"));
         colNoOfBag.setCellValueFactory(new PropertyValueFactory<>("noOfBag"));
         colUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));

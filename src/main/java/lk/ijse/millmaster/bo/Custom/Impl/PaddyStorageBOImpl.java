@@ -1,12 +1,9 @@
 package lk.ijse.millmaster.bo.Custom.Impl;
 
 import lk.ijse.millmaster.bo.Custom.PaddyStorageBO;
-import lk.ijse.millmaster.dao.Custom.OrderDAO;
 import lk.ijse.millmaster.dao.Custom.PaddyStorageDAO;
 import lk.ijse.millmaster.dao.DAOFactory;
-import lk.ijse.millmaster.dto.OrderDTO;
 import lk.ijse.millmaster.dto.PaddyStorageDTO;
-import lk.ijse.millmaster.entity.Order;
 import lk.ijse.millmaster.entity.PaddyStorage;
 
 import java.sql.SQLException;
@@ -43,6 +40,6 @@ public class PaddyStorageBOImpl implements PaddyStorageBO {
 
     @Override
     public String generateNewPaddyStorageID() throws SQLException, ClassNotFoundException {
-        return null;
+        return paddyStorageDAO.generateNewID();
     }
 }

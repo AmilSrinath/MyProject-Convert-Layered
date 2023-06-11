@@ -80,4 +80,20 @@ public class OrderDAOImpl implements OrderDAO {
         }
         return sum;
     }
+
+    @Override
+    public List<String> loadUserNames() throws SQLException {
+        List<String> allBuyerID = new ArrayList<>();
+        ResultSet rst = SQLUtil.execute("SELECT Buyer_ID FROM buyer");
+        while (rst.next()) {
+            String Ids = new String(rst.getString("Buyer_ID"));
+            allBuyerID.add(Ids);
+        }
+        return allBuyerID;
+    }
+
+    @Override
+    public boolean updateOrderStatus(String oid) throws SQLException {
+        return SQLUtil.execute("UPDATE orders SET Status=? WHERE Order_ID=?","Complete",oid);
+    }
 }

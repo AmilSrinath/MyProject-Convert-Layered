@@ -13,10 +13,10 @@ public class DAOFactory {
     }
 
     public enum DAOTypes {
-        USER,PRODUCT,ASSEST,BUYER,SUPPLIER,EMPLYOEE,ORDER,PADDYSTORAGE
+        USER,PRODUCT,ASSEST,BUYER,SUPPLIER,EMPLYOEE,ORDER,PADDYSTORAGE,FORGOTPASSWORD,ATTENDANCE,PLACEORDER,ORDERDETAILS
     }
 
-    public CrudDAO getDAO(DAOTypes types){
+    public SuperDAO getDAO(DAOTypes types){
         switch (types) {
             case USER:
                 return new UserDAOImpl();
@@ -34,6 +34,14 @@ public class DAOFactory {
                 return new OrderDAOImpl();
             case PADDYSTORAGE:
                 return new PaddyStorageDAOImpl();
+            case FORGOTPASSWORD:
+                return new ForgotPasswordDAOImpl();
+            case ATTENDANCE:
+                return new AttendanceDAOImpl();
+            case PLACEORDER:
+                return new PlaceOrderDAOImpl();
+            case ORDERDETAILS:
+                return new OrderDetailDAOImpl();
             default:
                 return null;
         }

@@ -21,7 +21,6 @@ import lk.ijse.millmaster.dao.Custom.OrderDAO;
 import lk.ijse.millmaster.dao.DAOFactory;
 import lk.ijse.millmaster.dto.OrderDTO;
 import lk.ijse.millmaster.dto.tm.OrderTM;
-import lk.ijse.millmaster.model.BuyerModel;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
@@ -169,18 +168,12 @@ public class ManageOrderFormController implements Initializable {
     }
 
     public void loadUserNames() throws SQLException {
-        try{
-            List<String> id = BuyerModel.getUserID();
-            ObservableList<String> obList = FXCollections.observableArrayList();
-
-            for (String un : id){
-                obList.add(un);
-            }
-            comBuyerName.setItems(obList);
-        }catch (SQLException e){
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
+        List<String> id = orderDAO.loadUserNames();
+        ObservableList<String> obList = FXCollections.observableArrayList();
+        for (String un : id){
+            obList.add(un);
         }
+        comBuyerName.setItems(obList);
     }
 
     public void btnPlaceOrderOnAction(ActionEvent event) throws IOException, SQLException, ClassNotFoundException {

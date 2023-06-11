@@ -16,14 +16,14 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import lk.ijse.millmaster.bo.BOFactory;
+import lk.ijse.millmaster.bo.Custom.PlaceOrderBO;
+import lk.ijse.millmaster.dao.Custom.PlaceOrderDAO;
+import lk.ijse.millmaster.dao.DAOFactory;
 import lk.ijse.millmaster.db.DBConnection;
 import lk.ijse.millmaster.dto.CartDTO;
 import lk.ijse.millmaster.dto.ProductDTO;
-import lk.ijse.millmaster.dto.tm.OrderTM;
 import lk.ijse.millmaster.dto.tm.PlaceOrderTM;
-import lk.ijse.millmaster.model.PlaceOrderModel;
-import lk.ijse.millmaster.model.ProductModel;
 import lk.ijse.millmaster.util.Regex;
 import lk.ijse.millmaster.util.TextFilds;
 import lombok.SneakyThrows;
@@ -57,21 +57,6 @@ public class PlaceOrderFormController implements Initializable {
     private AnchorPane root;
 
     @FXML
-    private AnchorPane ManageEmployeeForm;
-
-    @FXML
-    private Button btnCalculatePayment;
-
-    @FXML
-    private ImageView btnClose;
-
-    @FXML
-    private Label lblEmpSalaryPerHour;
-
-    @FXML
-    private Button btnCreateBill;
-
-    @FXML
     private JFXTextField txtQuntity;
 
     @FXML
@@ -79,16 +64,12 @@ public class PlaceOrderFormController implements Initializable {
 
     @FXML
     private TableView<PlaceOrderTM> tblPlaceOrder;
-    private TableView<OrderTM> tblOrder;
 
     @FXML
     private TableColumn<?, ?> colProductID;
 
     @FXML
     private TableColumn<?, ?> colOrderID;
-
-    @FXML
-    private TableColumn<?, ?> colProductType;
 
     @FXML
     private TableColumn<?, ?> colQuntity;
@@ -100,30 +81,12 @@ public class PlaceOrderFormController implements Initializable {
     private TableColumn<?, ?> colTotal;
 
     @FXML
-    private VBox SearchBarVBox;
-
-    @FXML
-    private JFXTextField txtSearchAttendace;
-
-    @FXML
-    private Button btnDelete;
-
-    @FXML
-    private Button btnUpdate;
-
-    @FXML
-    private Button btnClear;
-
-    @FXML
-    private ComboBox<String> comProductType;
-    private String OrderID;
-    Double NetTotal;
-
-    @FXML
     private ComboBox<String> comProductID;
-    ObservableList<PlaceOrderTM> observableList;
     private ObservableList<PlaceOrderTM> obList = FXCollections.observableArrayList();
     StackPane controllArea;
+
+    PlaceOrderBO productBO = (PlaceOrderBO) BOFactory.getBoFactory().getBO(BOFactory.BOTypes.PLACEORDER);
+    PlaceOrderDAO placeOrderDAO = (PlaceOrderDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.PLACEORDER);
 
     @SneakyThrows
     @Override
@@ -133,23 +96,18 @@ public class PlaceOrderFormController implements Initializable {
 //        getAll();
     }
 
-    private void loadProductID() {
-        try{
-            List<String> id = PlaceOrderModel.getProductID();
-            ObservableList<String> obList = FXCollections.observableArrayList();
+    private void loadProductID() throws SQLException {
+        List<String> id = placeOrderDAO.loadProductID();
+        ObservableList<String> obList = FXCollections.observableArrayList();
 
-            for (String un : id){
-                obList.add(un);
-            }
-            comProductID.setItems(obList);
-        }catch (SQLException e){
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
+        for (String un : id){
+            obList.add(un);
         }
+        comProductID.setItems(obList);
     }
 
     @FXML
-    void btnCalculatePaymentOnAction(ActionEvent event) throws SQLException {
+    void btnCalculatePaymentOnAction(ActionEvent event) {
         if (!isValidated()){
             new Alert(Alert.AlertType.ERROR,"Pleace Check TextFilds !").show();
             return;
@@ -245,16 +203,11 @@ public class PlaceOrderFormController implements Initializable {
 
     }
 
-    public void comProductIDOnAction(ActionEvent event) {
+    public void comProductIDOnAction(ActionEvent event) throws SQLException {
         String code = comProductID.getSelectionModel().getSelectedItem();
         txtQuntity.requestFocus();
-        try {
-            ProductDTO product = ProductModel.searchById(code);
-            fillItemFields(product);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "SQL Error!").show();
-        }
+        ProductDTO product = placeOrderDAO.searchById(code);
+        fillItemFields(product);
     }
 
     private void fillItemFields(ProductDTO product) {
@@ -295,9 +248,9 @@ public class PlaceOrderFormController implements Initializable {
             cartDTOList.add(cartDTO);
         }
 
-        boolean isPlaced = PlaceOrderModel.placeOrder(oid, cartDTOList);
+        boolean isPlaced = productBO.placeOrder(oid, cartDTOList);
         if(isPlaced) {
-            CreateBill(id);
+            //CreateBill(id);
         } else {
             new Alert(Alert.AlertType.ERROR, "Order Not Placed!").show();
         }

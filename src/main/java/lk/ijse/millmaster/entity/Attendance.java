@@ -1,7 +1,6 @@
-package lk.ijse.millmaster.dto;
+package lk.ijse.millmaster.entity;
 
 import lombok.*;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

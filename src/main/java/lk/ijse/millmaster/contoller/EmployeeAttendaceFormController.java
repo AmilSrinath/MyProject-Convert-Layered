@@ -11,46 +11,29 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
-import lk.ijse.millmaster.dto.Attendance;
-import lk.ijse.millmaster.dto.EmployeeDTO;
+import lk.ijse.millmaster.bo.BOFactory;
+import lk.ijse.millmaster.bo.Custom.AttendanceBO;
+import lk.ijse.millmaster.dto.AttendanceDTO;
 import lk.ijse.millmaster.dto.tm.AttendanceTM;
-import lk.ijse.millmaster.model.AttendanceModel;
 import lombok.SneakyThrows;
 
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.ResourceBundle;
 
 public class EmployeeAttendaceFormController implements Initializable {
-    private final static String URL = "jdbc:mysql://localhost:3306/Millmaster";
-    private final static Properties props = new Properties();
-
-    static{
-        props.setProperty("user", "root");
-        props.setProperty("password", "12345678");
-    }
-
     public ComboBox<Integer> comWorkingHours;
     public Button btnCalculate;
     public TableColumn <?,?>colEmpID;
     public TableColumn<?,?> colSalary;
-    public ComboBox <String>comEmp_ID;
     public ImageView btnClose;
     public AnchorPane root;
-    public Label lblEmpSalaryPerHour;
     public Label lblAttendaceID;
     public Label lblEmployeeSalaryPerHour;
     public Label lblEmployeeName;
     public Label lblEmpID;
-    @FXML
-    private AnchorPane ManageEmployeeForm;
 
     @FXML
     private TableView<AttendanceTM> tblEmployee;
@@ -63,29 +46,13 @@ public class EmployeeAttendaceFormController implements Initializable {
 
     @FXML
     private JFXTextField txtID;
-
-    @FXML
-    private VBox SearchBarVBox;
-
-    @FXML
-    private JFXTextField txtSearchAttendace;
-
-    @FXML
-    private Button btnSave;
-
-    @FXML
-    private Button btnDelete;
-
-    @FXML
-    private Button btnUpdate;
-
-    @FXML
-    private Button btnClear;
     ObservableList<AttendanceTM> observableList;
-    String lblUserName;
     String ID;
     String Name;
     String Salary;
+
+
+    AttendanceBO attendanceBO = (AttendanceBO) BOFactory.getBoFactory().getBO(BOFactory.BOTypes.ATTENDANCE);
 
     @SneakyThrows
     @Override
@@ -97,13 +64,9 @@ public class EmployeeAttendaceFormController implements Initializable {
         generateNextAttendenceID();
     }
 
-    private void generateNextAttendenceID() {
-        try {
-            String nextId = AttendanceModel.generateNextOrderId();
-            lblAttendaceID.setText(nextId);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    private void generateNextAttendenceID() throws SQLException, ClassNotFoundException {
+        String nextId = attendanceBO.generateNewAttendanceID();
+        lblAttendaceID.setText(nextId);
     }
 
     @FXML
@@ -113,20 +76,14 @@ public class EmployeeAttendaceFormController implements Initializable {
     }
 
     @FXML
-    void btnDeleteOnAction(ActionEvent event) throws SQLException {
+    void btnDeleteOnAction(ActionEvent event) throws SQLException, ClassNotFoundException {
         ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.OK_DONE);
         ButtonType no = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);
         Optional<ButtonType> result = new Alert(Alert.AlertType.INFORMATION, "Are you sure to remove?", yes, no).showAndWait();
 
         if (result.orElse(no) == yes) {
-            try (Connection con = DriverManager.getConnection(URL, props)) {
-                String sql = "DELETE FROM attendance WHERE Attendance_ID = ?";
-                PreparedStatement pstm = con.prepareStatement(sql);
-                pstm.setString(1, txtID.getText());
-                System.out.println(txtID.getText());
-                pstm.executeUpdate();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
+            if(!attendanceBO.deleteAttendance(txtID.getText())){
+                new Alert(Alert.AlertType.ERROR,"SQL Error").show();
             }
         }
         getAll();
@@ -134,22 +91,16 @@ public class EmployeeAttendaceFormController implements Initializable {
     }
 
     @FXML
-    void btnUpdateOnAction(ActionEvent event) throws SQLException {
+    void btnUpdateOnAction(ActionEvent event) throws SQLException, ClassNotFoundException {
         Integer hours = comWorkingHours.getValue();
         Double salary = Double.valueOf(lblEmployeeSalaryPerHour.getText());
         Double S = hours * salary;
+        String id = txtID.getText();
 
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            String sql = "UPDATE attendance SET Working_Hour = ?, Salary=? WHERE Attendance_ID = ?";
-
-            PreparedStatement pstm = con.prepareStatement(sql);
-            pstm.setInt(1, hours);
-            pstm.setDouble(2, S);
-            pstm.setString(3, txtID.getText());
-
-            if (pstm.executeUpdate() > 0) {
-                new Alert(Alert.AlertType.CONFIRMATION, "Product Updated!!").show();
-            }
+        if(attendanceBO.updateAttendance(new AttendanceDTO(id,hours,null,S))){
+            new Alert(Alert.AlertType.CONFIRMATION, "Employee Salary Updated !!").show();
+        }else {
+            new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
         }
         getAll();
         generateNextAttendenceID();
@@ -169,59 +120,34 @@ public class EmployeeAttendaceFormController implements Initializable {
         root.getScene().getWindow().hide();
     }
 
-    public void btnCalculateOnAction(ActionEvent event) throws SQLException {
+    public void btnCalculateOnAction(ActionEvent event) throws SQLException, ClassNotFoundException {
         Object selectedItem = comWorkingHours.getSelectionModel().getSelectedItem();
         int hour = (Integer) selectedItem;
         Double salaryPerHour = Double.valueOf(lblEmployeeSalaryPerHour.getText());
         Double salary = salaryPerHour * hour;
+        String id = lblAttendaceID.getText();
+        String eid = lblEmpID.getText();
 
-        try(Connection con = DriverManager.getConnection(URL,props)){
-            String sql = "INSERT INTO attendance(Attendance_ID,Working_Hour,Emp_ID,Salary) VALUES(?,?,?,?)";
-
-            PreparedStatement pstm = con.prepareStatement(sql);
-            pstm.setString(1,lblAttendaceID.getText());
-            pstm.setInt(2,hour);
-            pstm.setString(3, lblEmpID.getText());
-            pstm.setDouble(4,salary);
-
-            try {
-                int affectedRows = pstm.executeUpdate();
-                if (affectedRows > 0) {
-                    new Alert(Alert.AlertType.CONFIRMATION,"Attendance Added !!").show();
-                }
-            }catch (Exception ex){
-                new Alert(Alert.AlertType.ERROR,"This ID has been previously used!!").show();
-            }
+        if(attendanceBO.addAttendance(new AttendanceDTO(id,hour,eid,salary))){
+            new Alert(Alert.AlertType.CONFIRMATION,"Attendance Added !!").show();
+        }else {
+            new Alert(Alert.AlertType.ERROR,"SQL Error !!").show();
         }
+
         colEmpID.setText("");
         colWorkingHour.setText("");
         getAll();
         generateNextAttendenceID();
     }
 
-    private void fillItemFields(EmployeeDTO employee) {
-        lblEmpSalaryPerHour.setText(String.valueOf(employee.getSalaryPerHour()));
-    }
+    void getAll() throws SQLException, ClassNotFoundException {
+        observableList = FXCollections.observableArrayList();
+        List<AttendanceDTO> allCustomers = attendanceBO.getAllAttendance();
 
-    void getAll() throws SQLException {
-        try{
-            observableList = FXCollections.observableArrayList();
-            List<Attendance> buyerList = AttendanceModel.getAll();
-
-            for ( Attendance attendance: buyerList){
-                observableList.add(new AttendanceTM(
-                        attendance.getId(),
-                        attendance.getHour(),
-                        attendance.getEmp_id(),
-                        attendance.getSalary()
-                ));
-            }
-
-            tblEmployee.setItems(observableList);
-        }catch (SQLException e){
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "Query Error!!").show();
+        for (AttendanceDTO a : allCustomers) {
+            observableList.add(new AttendanceTM(a.getId(), a.getHour(),a.getEmp_id(),a.getSalary()));
         }
+        tblEmployee.setItems(observableList);
     }
 
     void setCellValueFactory() {

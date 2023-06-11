@@ -2,8 +2,11 @@ package lk.ijse.millmaster.dao.Custom.Impl;
 
 import lk.ijse.millmaster.dao.Custom.ProductDAO;
 import lk.ijse.millmaster.dao.SQLUtil;
+import lk.ijse.millmaster.dto.CartDTO;
+import lk.ijse.millmaster.dto.PaddyStorageDTO;
 import lk.ijse.millmaster.entity.Product;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -83,5 +86,36 @@ public class ProductDAOImpl implements ProductDAO {
             allStockIds.add(Ids);
         }
         return allStockIds;
+    }
+
+    @Override
+    public boolean updateQty(List<CartDTO> cartDTOList) throws SQLException {
+        for (CartDTO dto : cartDTOList) {
+            boolean isUpdated = SQLUtil.execute("UPDATE production SET Product_Quntity = (Product_Quntity - ?) WHERE Product_ID = ?",dto.getQty(),dto.getCode());
+            if (!isUpdated){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public PaddyStorageDTO searchById(String code) throws SQLException {
+        ResultSet resultSet = SQLUtil.execute("SELECT * FROM stock WHERE Stock_ID = ?",code);
+        if(resultSet.next()) {
+            return new PaddyStorageDTO(
+                    resultSet.getString(1),
+                    resultSet.getString(2),
+                    resultSet.getDouble(3),
+                    resultSet.getInt(4),
+                    resultSet.getDouble(5),
+                    resultSet.getString(6),
+                    resultSet.getString(7),
+                    resultSet.getDouble(8),
+                    resultSet.getString(9),
+                    resultSet.getString(10)
+            );
+        }
+        return null;
     }
 }

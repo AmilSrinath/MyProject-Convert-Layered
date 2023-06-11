@@ -17,8 +17,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
-import lk.ijse.millmaster.dto.UserDTO;
-import lk.ijse.millmaster.model.UserModel;
+import lk.ijse.millmaster.dao.Custom.ForgotPasswordDAO;
+import lk.ijse.millmaster.dao.DAOFactory;
 import lombok.SneakyThrows;
 
 import javax.mail.MessagingException;
@@ -46,6 +46,8 @@ public class ForgotPasswordFormController implements Initializable {
     private Label lblEmail;
     private Button btn;
 
+    ForgotPasswordDAO forgotPasswordDAO = (ForgotPasswordDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.FORGOTPASSWORD);
+
     @SneakyThrows
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -53,7 +55,7 @@ public class ForgotPasswordFormController implements Initializable {
     }
 
     @FXML
-    void btnSendOTPOnAction(ActionEvent event) throws MessagingException, IOException {
+    void btnSendOTPOnAction(ActionEvent event) throws MessagingException, IOException, SQLException {
         Object selectedItem1 = comUserName.getSelectionModel().getSelectedItem();
         String Username = (String) selectedItem1;
         userName=Username;
@@ -61,16 +63,13 @@ public class ForgotPasswordFormController implements Initializable {
             System.out.println("OK");
             int otp = new Random().nextInt(9000) + 1000;
             comUserName.setStyle("-fx-background-color: null");
-            try {
-                UserDTO user = UserModel.searchByName(Username);
-                fillItemFields(user);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                new Alert(Alert.AlertType.ERROR, "SQL Error!").show();
-            }
+
+            lblEmail.setText(forgotPasswordDAO.searchByName(Username));
+            System.out.println(lblEmail.getText());
+
             JavaMailUtil.sendMail(lblEmail.getText(),otp);
             OTP=otp;
-            System.out.println(">>>"+otp);
+            System.out.println("OTP is : "+otp);
 
             Parent root = FXMLLoader.load(getClass().getResource("/view/ForgotPassword2.fxml"));
             Scene scene = btnSendOTP.getScene();
@@ -94,23 +93,13 @@ public class ForgotPasswordFormController implements Initializable {
         }
     }
 
-    private void fillItemFields(UserDTO user) {
-        lblEmail.setText(user.getEmail());
-    }
-
     public void loadUserNames() throws SQLException {
-        try{
-            List<String> name = UserModel.getUserName();
-            ObservableList<String> obList = FXCollections.observableArrayList();
-
-            for (String un : name){
-                obList.add(un);
-            }
-            comUserName.setItems(obList);
-        }catch (SQLException e){
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
+        List<String> id = forgotPasswordDAO.loadUserNames();
+        ObservableList<String> obList = FXCollections.observableArrayList();
+        for (String un : id){
+            obList.add(un);
         }
+        comUserName.setItems(obList);
     }
 
     public void btnCloseOnAction(MouseEvent mouseEvent) {

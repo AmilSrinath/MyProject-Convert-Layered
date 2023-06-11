@@ -60,4 +60,24 @@ public class UserDAOImpl implements UserDAO {
             return "U001";
         }
     }
+
+    @Override
+    public List<String> getUserName() throws SQLException {
+        List<String> allUserName = new ArrayList<>();
+        ResultSet rst = SQLUtil.execute("SELECT User_Name FROM user");
+        while (rst.next()) {
+            String Ids = new String(rst.getString("User_Name"));
+            allUserName.add(Ids);
+        }
+        return allUserName;
+    }
+
+    @Override
+    public String searchByUser_Name(String userName) throws SQLException {
+        ResultSet rst = SQLUtil.execute("SELECT User_Password FROM user WHERE User_Name = ?",userName);
+        if(rst.next()) {
+            return rst.getString(1);
+        }
+        return null;
+    }
 }

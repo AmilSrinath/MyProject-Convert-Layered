@@ -19,7 +19,6 @@ import lk.ijse.millmaster.dao.DAOFactory;
 import lk.ijse.millmaster.dto.PaddyStorageDTO;
 import lk.ijse.millmaster.dto.ProductDTO;
 import lk.ijse.millmaster.dto.tm.ProductTM;
-import lk.ijse.millmaster.model.PaddyStorageModel;
 import lk.ijse.millmaster.util.Regex;
 import lk.ijse.millmaster.util.TextFilds;
 import lombok.SneakyThrows;
@@ -266,20 +265,15 @@ public class ManageProductFormController implements Initializable {
         comProductType.setValue(null);
     }
 
-    public void comStockIDOnAction(ActionEvent event) {
+    public void comStockIDOnAction(ActionEvent event) throws SQLException {
         txtPaddyQuntity.requestFocus();
         setComStockID();
     }
 
-    void setComStockID(){
+    void setComStockID() throws SQLException {
         String code = comStockID.getSelectionModel().getSelectedItem();
-        try {
-            PaddyStorageDTO paddyStorage = PaddyStorageModel.searchById(code);
-            fillItemFields(paddyStorage);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "SQL Error!").show();
-        }
+        PaddyStorageDTO paddyStorage = productDAO.searchById(code);
+        fillItemFields(paddyStorage);
     }
 
     private void fillItemFields(PaddyStorageDTO paddyStorage) {

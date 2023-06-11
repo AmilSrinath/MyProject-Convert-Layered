@@ -14,26 +14,17 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import lk.ijse.millmaster.bo.BOFactory;
 import lk.ijse.millmaster.bo.Custom.BuyerBO;
-import lk.ijse.millmaster.bo.Custom.ProductBO;
 import lk.ijse.millmaster.dao.Custom.BuyerDAO;
 import lk.ijse.millmaster.dao.DAOFactory;
 import lk.ijse.millmaster.dto.BuyerDTO;
-import lk.ijse.millmaster.dto.UserDTO;
 import lk.ijse.millmaster.dto.tm.BuyerTM;
-import lk.ijse.millmaster.dto.tm.UserTM;
-import lk.ijse.millmaster.model.BuyerModel;
-import lk.ijse.millmaster.model.UserModel;
 import lk.ijse.millmaster.util.Regex;
 import lk.ijse.millmaster.util.TextFilds;
 import lombok.SneakyThrows;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 

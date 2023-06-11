@@ -19,8 +19,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import lk.ijse.millmaster.dto.UserDTO;
-import lk.ijse.millmaster.model.UserModel;
+import lk.ijse.millmaster.dao.Custom.UserDAO;
+import lk.ijse.millmaster.dao.DAOFactory;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
@@ -41,6 +41,8 @@ public class LoginFormController implements Initializable{
     public JFXTextField txtPassword1;
     public ComboBox comUsername;
     public Button btnSignIn;
+
+    UserDAO userDAO = (UserDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.USER);
 
     @SneakyThrows
     @Override
@@ -81,18 +83,13 @@ public class LoginFormController implements Initializable{
     }
 
     public void loadUserNames() throws SQLException {
-        try{
-            List<String> username = UserModel.getUserName();
-            ObservableList<String> obList = FXCollections.observableArrayList();
+        List<String> username = userDAO.getUserName();
+        ObservableList<String> obList = FXCollections.observableArrayList();
 
-            for (String un : username){
-                obList.add(un);
-            }
-            comUsername.setItems(obList);
-        }catch (SQLException e){
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
+        for (String un : username){
+            obList.add(un);
         }
+        comUsername.setItems(obList);
     }
 
     public void txtPasswordOnKeyTyped(KeyEvent keyEvent) {
@@ -107,9 +104,9 @@ public class LoginFormController implements Initializable{
     private void btnSignInOnAction() {
         String user_name = (String) comUsername.getSelectionModel().getSelectedItem();
         try{
-            UserDTO user = UserModel.searchByUser_Name(user_name);
+            String user = userDAO.searchByUser_Name(user_name);
 
-            if (user.getPassword().equalsIgnoreCase(txtPassword.getText())){
+            if (user.equalsIgnoreCase(txtPassword.getText())){
                 FXMLLoader loader= new FXMLLoader(getClass().getResource("/view/HomeForm.fxml"));
                 AnchorPane anchorPane = loader.load();
                 HomeFormController controller = loader.getController();
