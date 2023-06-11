@@ -25,10 +25,7 @@ import java.util.logging.Logger;
 
 public class LodingFormController implements Initializable {
     public ImageView imageView;
-    public ImageView btnCloase;
     public ImageView btnClose;
-    public VBox V_Box;
-    public JFXButton btnSignIn;
     public AnchorPane LodingForm;
 
 

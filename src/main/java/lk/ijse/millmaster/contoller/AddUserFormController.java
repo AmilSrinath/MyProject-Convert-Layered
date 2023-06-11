@@ -11,24 +11,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import lk.ijse.millmaster.dao.Custom.UserDAO;
+import lk.ijse.millmaster.dao.DAOFactory;
+import lk.ijse.millmaster.entity.User;
 
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Properties;
 import java.util.ResourceBundle;
 
 public class AddUserFormController implements Initializable {
-    private final static String URL = "jdbc:mysql://localhost:3306/Millmaster";
-    private final static Properties props = new Properties();
-
-    static{
-        props.setProperty("user", "root");
-        props.setProperty("password", "12345678");
-    }
-
     public AnchorPane ManageUserForm;
     public ImageView hidePassword;
     public ImageView hidePassword1;
@@ -42,6 +33,8 @@ public class AddUserFormController implements Initializable {
     public JFXPasswordField txtPassword;
     public JFXTextField txtPassword1;
     public JFXTextField txtReEnterPassword1;
+
+    UserDAO userDAO = (UserDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.USER);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -71,7 +64,7 @@ public class AddUserFormController implements Initializable {
         txtReEnterPassword1.setVisible(false);
     }
 
-    public void btnSaveOnAction(ActionEvent actionEvent) throws SQLException {
+    public void btnSaveOnAction(ActionEvent actionEvent) throws SQLException, ClassNotFoundException {
         String id = txtUserID.getText();
         String name = txtName.getText();
         String password = txtPassword.getText();
@@ -80,25 +73,12 @@ public class AddUserFormController implements Initializable {
         String email = txtEmail.getText();
 
         if (password.equalsIgnoreCase(reEnterPassword)){
-            try(Connection con = DriverManager.getConnection(URL,props)){
-                String sql = "INSERT INTO user(User_ID , User_Name, User_Password,User_NIC, User_Email) VALUES(?,?,?,?,?)";
-
-                PreparedStatement pstm = con.prepareStatement(sql);
-                pstm.setString(1,id);
-                pstm.setString(2,name);
-                pstm.setString(3,password);
-                pstm.setString(4,nic);
-                pstm.setString(5,email);
-
-                try {
-                    int affectedRows = pstm.executeUpdate();
-                    if (affectedRows > 0) {
-                        new Alert(Alert.AlertType.CONFIRMATION, "Customer Added !!").show();
-                    }
-                }catch (Exception ex){
-                    new Alert(Alert.AlertType.CONFIRMATION, "This ID has been previously used!!").show();
-                }
+            if(userDAO.add(new User(id,name,password,nic,email))){
+                new Alert(Alert.AlertType.CONFIRMATION, "User Added !!").show();
+            }else {
+                new Alert(Alert.AlertType.ERROR, "SQL Error !!").show();
             }
+
             txtReEnterPassword.setStyle("-fx-background-color: 333333;");
             txtUserID.setText("");
             txtNIC.setText("");

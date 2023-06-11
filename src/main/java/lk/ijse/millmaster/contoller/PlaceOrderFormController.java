@@ -38,14 +38,6 @@ import java.sql.*;
 import java.util.*;
 
 public class PlaceOrderFormController implements Initializable {
-    private final static String URL = "jdbc:mysql://localhost:3306/Millmaster";
-    private final static Properties props = new Properties();
-
-    static{
-        props.setProperty("user", "root");
-        props.setProperty("password", "12345678");
-    }
-
     public AnchorPane PlaceOrderForm;
     public Label lblProductCount;
     public Label lblProductName;
@@ -250,7 +242,7 @@ public class PlaceOrderFormController implements Initializable {
 
         boolean isPlaced = productBO.placeOrder(oid, cartDTOList);
         if(isPlaced) {
-            //CreateBill(id);
+            CreateBill(id);
         } else {
             new Alert(Alert.AlertType.ERROR, "Order Not Placed!").show();
         }
@@ -270,22 +262,7 @@ public class PlaceOrderFormController implements Initializable {
     }
 
     String NetTotalCalculate(String id) throws SQLException {
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            double tot=0;
-
-            String sql = "SELECT SUM(Total) FROM order_product WHERE Order_ID=?";
-
-            PreparedStatement pstm = con.prepareStatement(sql);
-            pstm.setString(1,id);
-
-            ResultSet affectedRows = pstm.executeQuery();
-            System.out.println(affectedRows);
-            while (affectedRows.next()){
-                double c = affectedRows.getInt(1);
-                tot=tot+c;
-            }
-            return String.valueOf(tot);
-        }
+        return String.valueOf(placeOrderDAO.NetTotalCalculate(id));
     }
 
     public void txtUnitPriceOnKeyReleased(KeyEvent keyEvent) {

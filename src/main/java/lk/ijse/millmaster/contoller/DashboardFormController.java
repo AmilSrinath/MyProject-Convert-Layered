@@ -1,31 +1,20 @@
 package lk.ijse.millmaster.contoller;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.util.Duration;
+import lk.ijse.millmaster.dao.Custom.DashboardDAO;
+import lk.ijse.millmaster.dao.DAOFactory;
 import lombok.SneakyThrows;
 
 import java.net.URL;
 import java.sql.*;
-import java.util.Properties;
 import java.util.ResourceBundle;
 
 public class DashboardFormController implements Initializable {
-    private final static String URL = "jdbc:mysql://localhost:3306/Millmaster";
-    private final static Properties props = new Properties();
-
-    static{
-        props.setProperty("user", "root");
-        props.setProperty("password", "12345678");
-    }
-
     public Label lblRedRaw25Kg;
     public Label lblRedRaw10Kg;
     public Label lblRedRaw5Kg;
@@ -54,287 +43,86 @@ public class DashboardFormController implements Initializable {
     public AnchorPane OrderCom;
 
     @FXML
-    private AnchorPane DashboardPaddyStock;
-
-    @FXML
     private Label lblPaddyStockCount;
-
     @FXML
     private Label lblPaddyStok;
-
-    @FXML
-    private AnchorPane DashboardStock1;
-
-    @FXML
-    private Label lblProduct5KgCount;
-
-    @FXML
-    private Label lblProduct5Kg;
-
-    @FXML
-    private AnchorPane DashboardStock11;
-
-    @FXML
-    private Label lblProduct10KgCount;
-
-    @FXML
-    private Label lblProduct10Kg;
-
-    @FXML
-    private AnchorPane DashboardStock111;
-
-    @FXML
-    private Label lblProduct25KgCount;
-
-    @FXML
-    private Label lblProduct25Kg;
-
     @FXML
     private Label lblDashboardUserName;
-
-    @FXML
-    private AnchorPane DashboardStock1112;
-
     @FXML
     private Label lblProductRedRawCount;
-
     @FXML
     private Label lblProductRedRaw;
-
     @FXML
     private Label lblProductRedRawKg;
-
-    @FXML
-    private AnchorPane DashboardStock12;
-
     @FXML
     private Label lblProductNaduCount;
-
     @FXML
     private Label lblProductNadu;
-
     @FXML
     private Label lblProductKg;
-
-    @FXML
-    private AnchorPane DashboardStock112;
-    public Label lblProductCount1;
-    public Label lblProduct1;
-    public Label lblProductCount2;
-    public Label lblProduct2;
-    public Label lblProductCount3;
-    public Label lblProduct3;
     public VBox SearchBarVBox;
-
     @FXML
     private Label lblProductRedNaduCount;
-
     @FXML
     private Label lblProductRedNadu;
-
     @FXML
     private Label lblProductRedNaduKg;
-
-    @FXML
-    private AnchorPane DashboardStock1111;
-
     @FXML
     private Label lblProductSambaCount;
-
     @FXML
     private Label lblProductSamba;
-
     @FXML
     private Label lblProductSambaKg;
-
-    @FXML
-    private AnchorPane DashboardStock13;
-
     @FXML
     private Label lblProductWhiteRawCount;
-
     @FXML
     private Label lblProductWhiteRaw;
-
     @FXML
     private Label lblProductWhiteRawKg;
-
-    @FXML
-    private AnchorPane DashboardStock113;
-
     @FXML
     private Label lblProductKeerisambaCount;
-
     @FXML
     private Label lblProductKeerisamba;
-
     @FXML
     private Label lblProductKeerisambaKg;
-
-    @FXML
-    private AnchorPane Nadu5Kg;
-
     @FXML
     private Label Nadu5KgC;
-
-    @FXML
-    private AnchorPane Product;
-
     @FXML
     private Label ProductC;
-
-    @FXML
-    private AnchorPane Nadu10Kg;
-
     @FXML
     private Label Nadu10KgC;
-
-    @FXML
-    private Label lblProduct5Kg1;
-
-    @FXML
-    private AnchorPane Nadu25Kg;
-
     @FXML
     private Label Nadu25KgC;
-
-    @FXML
-    private Label lblProduct5Kg11;
-
-    @FXML
-    private AnchorPane RedNadu5Kg;
-
     @FXML
     private Label RedNadu5KgC;
-
-    @FXML
-    private Label lblProduct5Kg2;
-
-    @FXML
-    private AnchorPane RedNadu10Kg;
-
     @FXML
     private Label RedNadu10KgC;
-
-    @FXML
-    private Label lblProduct5Kg12;
-
-    @FXML
-    private AnchorPane RedNadu25Kg;
-
     @FXML
     private Label RedNadu25KgC;
-
-    @FXML
-    private Label lblProduct5Kg111;
-
-    @FXML
-    private AnchorPane Samba5Kg;
-
     @FXML
     private Label Samba5KgC;
-
-    @FXML
-    private Label lblProduct5Kg3;
-
-    @FXML
-    private AnchorPane Samba10Kg;
-
     @FXML
     private Label Samba10KgC;
-
-    @FXML
-    private Label lblProduct5Kg13;
-
-    @FXML
-    private AnchorPane Samba25Kg;
-
     @FXML
     private Label Samba25KgC;
-
-    @FXML
-    private Label lblProduct5Kg112;
-
-    @FXML
-    private AnchorPane WhiteRaw5Kg;
-
     @FXML
     private Label WhiteRaw5KgC;
-
-    @FXML
-    private Label lblProduct5Kg21;
-
-    @FXML
-    private AnchorPane WhiteRaw10Kg;
-
     @FXML
     private Label WhiteRaw10KgC;
-
-    @FXML
-    private Label lblProduct5Kg121;
-
-    @FXML
-    private AnchorPane WhiteRaw25Kg;
-
     @FXML
     private Label WhiteRaw25KgC;
-
-    @FXML
-    private Label lblProduct5Kg1111;
-
-    @FXML
-    private AnchorPane Keerisamba5Kg;
-
     @FXML
     private Label Keerisamba5KgC;
-
-    @FXML
-    private Label lblProduct5Kg211;
-
-    @FXML
-    private AnchorPane Keerisamba10Kg;
-
     @FXML
     private Label Keerisamba10KgC;
-
-    @FXML
-    private Label lblProduct5Kg1211;
-
-    @FXML
-    private AnchorPane Keerisamba25Kg;
-
     @FXML
     private Label Keerisamba25KgC;
-
-    @FXML
-    private Label lblProduct5Kg11111;
-
-    @FXML
-    private AnchorPane RedRaw5Kg;
-
     @FXML
     private Label RedRaw5KgC;
-
-    @FXML
-    private Label lblProduct5Kg22;
-
-    @FXML
-    private AnchorPane RedRad10Kg;
-
     @FXML
     private Label RedRad10KgC;
 
-    @FXML
-    private Label lblProduct5Kg122;
-
-    @FXML
-    private AnchorPane RedRad25Kg;
-
-    @FXML
-    private Label RedRad25KgC;
-
-    @FXML
-    private Label lblProduct5Kg1112;
+    DashboardDAO dashboardDAO = (DashboardDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.DASHBOARD);
 
     @SneakyThrows
     @Override
@@ -363,333 +151,83 @@ public class DashboardFormController implements Initializable {
         OrderActive();
     }
     void OrderComplete() throws SQLException {
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            int sum=0;
-            Statement st = con.createStatement();
-            ResultSet resultSet = st.executeQuery("SELECT Count(Status)FROM orders WHERE Status='Complete'");
-
-            while (resultSet.next()){
-                int c = resultSet.getInt(1);
-                sum=sum+c;
-            }
-            lblComC.setText(String.valueOf(sum));
-        }
+        lblComC.setText(String.valueOf(dashboardDAO.OrderComplete()));
     }
 
     void OrderActive() throws SQLException {
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            int sum=0;
-            Statement st = con.createStatement();
-            ResultSet resultSet = st.executeQuery("SELECT Count(Status)FROM orders WHERE Status='Active'");
-
-            while (resultSet.next()){
-                int c = resultSet.getInt(1);
-                sum=sum+c;
-            }
-            lblActC.setText(String.valueOf(sum));
-        }
+        lblActC.setText(String.valueOf(dashboardDAO.OrderActive()));
     }
 
     private void getRedRawSum() throws SQLException {
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            int sum5kg = 0;
-            int sum10kg = 0;
-            int sum25kg = 0;
-            Statement sum5kgST = con.createStatement();
-            Statement sum10kgST = con.createStatement();
-            Statement sum25kgST = con.createStatement();
-
-            ResultSet sum5kgRS = sum5kgST.executeQuery("SELECT SUM(Product_Quntity) FROM production WHERE Product_Type='Red Raw Rice 5Kg'");
-            ResultSet sum10kgRS = sum10kgST.executeQuery("SELECT SUM(Product_Quntity) FROM production WHERE Product_Type='Red Raw Rice 10Kg'");
-            ResultSet sum25kgRS = sum25kgST.executeQuery("SELECT SUM(Product_Quntity) FROM production WHERE Product_Type='Red Raw Rice 25Kg'");
-
-            while (sum5kgRS.next()) {
-                int c = sum5kgRS.getInt(1);
-                sum5kg = sum5kg + c;
-            }
-            while (sum10kgRS.next()){
-                int c1 = sum10kgRS.getInt(1);
-                sum10kg = sum10kg + c1;
-            }
-            while (sum25kgRS.next()){
-                int c1 = sum25kgRS.getInt(1);
-                sum25kg = sum25kg + c1;
-            }
-            RedRaw5KgC.setText(String.valueOf(sum5kg));
-            RedRad10KgC.setText(String.valueOf(sum10kg));
-            RedRaw25KgC.setText(String.valueOf(sum25kg));
-        }
+        RedRaw5KgC.setText(String.valueOf(dashboardDAO.getRedRawSum5kg()));
+        RedRad10KgC.setText(String.valueOf(dashboardDAO.getRedRawSum10kg()));
+        RedRaw25KgC.setText(String.valueOf(dashboardDAO.getRedRawSum25kg()));
     }
 
     private void getKeerisambaSum() throws SQLException {
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            int sum5kg = 0;
-            int sum10kg = 0;
-            int sum25kg = 0;
-            Statement sum5kgST = con.createStatement();
-            Statement sum10kgST = con.createStatement();
-            Statement sum25kgST = con.createStatement();
-
-            ResultSet sum5kgRS = sum5kgST.executeQuery("SELECT SUM(Product_Quntity) FROM production WHERE Product_Type='Keerisamba 5Kg'");
-            ResultSet sum10kgRS = sum10kgST.executeQuery("SELECT SUM(Product_Quntity) FROM production WHERE Product_Type='Keerisamba 10Kg'");
-            ResultSet sum25kgRS = sum25kgST.executeQuery("SELECT SUM(Product_Quntity) FROM production WHERE Product_Type='Keerisamba 25Kg'");
-
-            while (sum5kgRS.next()) {
-                int c = sum5kgRS.getInt(1);
-                sum5kg = sum5kg + c;
-            }
-            while (sum10kgRS.next()){
-                int c1 = sum10kgRS.getInt(1);
-                sum10kg = sum10kg + c1;
-            }
-            while (sum25kgRS.next()){
-                int c1 = sum25kgRS.getInt(1);
-                sum25kg = sum25kg + c1;
-            }
-            Keerisamba5KgC.setText(String.valueOf(sum5kg));
-            Keerisamba10KgC.setText(String.valueOf(sum10kg));
-            Keerisamba25KgC.setText(String.valueOf(sum25kg));
-        }
+        Keerisamba5KgC.setText(String.valueOf(dashboardDAO.getKeerisambaSum5kg()));
+        Keerisamba10KgC.setText(String.valueOf(dashboardDAO.getKeerisambaSum10kg()));
+        Keerisamba25KgC.setText(String.valueOf(dashboardDAO.getKeerisambaSum25kg()));
     }
 
     private void getWhiteRawSum() throws SQLException {
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            int sum5kg = 0;
-            int sum10kg = 0;
-            int sum25kg = 0;
-            Statement sum5kgST = con.createStatement();
-            Statement sum10kgST = con.createStatement();
-            Statement sum25kgST = con.createStatement();
-
-            ResultSet sum5kgRS = sum5kgST.executeQuery("SELECT SUM(Product_Quntity) FROM production WHERE Product_Type='White Raw Rice 5Kg'");
-            ResultSet sum10kgRS = sum10kgST.executeQuery("SELECT SUM(Product_Quntity) FROM production WHERE Product_Type='White Raw Rice 10Kg'");
-            ResultSet sum25kgRS = sum25kgST.executeQuery("SELECT SUM(Product_Quntity) FROM production WHERE Product_Type='White Raw Rice 25Kg'");
-
-            while (sum5kgRS.next()) {
-                int c = sum5kgRS.getInt(1);
-                sum5kg = sum5kg + c;
-            }
-            while (sum10kgRS.next()){
-                int c1 = sum10kgRS.getInt(1);
-                sum10kg = sum10kg + c1;
-            }
-            while (sum25kgRS.next()){
-                int c1 = sum25kgRS.getInt(1);
-                sum25kg = sum25kg + c1;
-            }
-            WhiteRaw5KgC.setText(String.valueOf(sum5kg));
-            WhiteRaw10KgC.setText(String.valueOf(sum10kg));
-            WhiteRaw25KgC.setText(String.valueOf(sum25kg));
-        }
+        WhiteRaw5KgC.setText(String.valueOf(dashboardDAO.getWhiteRawSum5kg()));
+        WhiteRaw10KgC.setText(String.valueOf(dashboardDAO.getWhiteRawSum10kg()));
+        WhiteRaw25KgC.setText(String.valueOf(dashboardDAO.getWhiteRawSum25kg()));
     }
 
     private void getSambaSum() throws SQLException {
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            int sum5kg = 0;
-            int sum10kg = 0;
-            int sum25kg = 0;
-            Statement sum5kgST = con.createStatement();
-            Statement sum10kgST = con.createStatement();
-            Statement sum25kgST = con.createStatement();
-
-            ResultSet sum5kgRS = sum5kgST.executeQuery("SELECT SUM(Product_Quntity) FROM production WHERE Product_Type='Samba 5Kg'");
-            ResultSet sum10kgRS = sum10kgST.executeQuery("SELECT SUM(Product_Quntity) FROM production WHERE Product_Type='Samba 10Kg'");
-            ResultSet sum25kgRS = sum25kgST.executeQuery("SELECT SUM(Product_Quntity) FROM production WHERE Product_Type='Samba 25Kg'");
-
-            while (sum5kgRS.next()) {
-                int c = sum5kgRS.getInt(1);
-                sum5kg = sum5kg + c;
-            }
-            while (sum10kgRS.next()){
-                int c1 = sum10kgRS.getInt(1);
-                sum10kg = sum10kg + c1;
-            }
-            while (sum25kgRS.next()){
-                int c1 = sum25kgRS.getInt(1);
-                sum25kg = sum25kg + c1;
-            }
-            Samba5KgC.setText(String.valueOf(sum5kg));
-            Samba10KgC.setText(String.valueOf(sum10kg));
-            Samba25KgC.setText(String.valueOf(sum25kg));
-        }
+        Samba5KgC.setText(String.valueOf(dashboardDAO.getSambaSum5kg()));
+        Samba10KgC.setText(String.valueOf(dashboardDAO.getSambaSum10kg()));
+        Samba25KgC.setText(String.valueOf(dashboardDAO.getSambaSum25kg()));
     }
 
     private void getNaduSum() throws SQLException {
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            int sum5kg = 0;
-            int sum10kg = 0;
-            int sum25kg = 0;
-            Statement sum5kgST = con.createStatement();
-            Statement sum10kgST = con.createStatement();
-            Statement sum25kgST = con.createStatement();
-
-            ResultSet sum5kgRS = sum5kgST.executeQuery("SELECT SUM(Product_Quntity) FROM production WHERE Product_Type='Nadu 5Kg'");
-            ResultSet sum10kgRS = sum10kgST.executeQuery("SELECT SUM(Product_Quntity) FROM production WHERE Product_Type='Nadu 10Kg'");
-            ResultSet sum25kgRS = sum25kgST.executeQuery("SELECT SUM(Product_Quntity) FROM production WHERE Product_Type='Nadu 25Kg'");
-
-            while (sum5kgRS.next()) {
-                int c = sum5kgRS.getInt(1);
-                sum5kg = sum5kg + c;
-            }
-            while (sum10kgRS.next()){
-                int c1 = sum10kgRS.getInt(1);
-                sum10kg = sum10kg + c1;
-            }
-            while (sum25kgRS.next()){
-                int c1 = sum25kgRS.getInt(1);
-                sum25kg = sum25kg + c1;
-            }
-            Nadu5KgC.setText(String.valueOf(sum5kg));
-            Nadu10KgC.setText(String.valueOf(sum10kg));
-            Nadu25KgC.setText(String.valueOf(sum25kg));
-        }
+        Nadu5KgC.setText(String.valueOf(dashboardDAO.getNaduSum5kg()));
+        Nadu10KgC.setText(String.valueOf(dashboardDAO.getNaduSum10kg()));
+        Nadu25KgC.setText(String.valueOf(dashboardDAO.getNaduSum25kg()));
     }
 
     private void getRedNaduSum() throws SQLException {
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            int sum5kg = 0;
-            int sum10kg = 0;
-            int sum25kg = 0;
-            Statement sum5kgST = con.createStatement();
-            Statement sum10kgST = con.createStatement();
-            Statement sum25kgST = con.createStatement();
-
-            ResultSet sum5kgRS = sum5kgST.executeQuery("SELECT SUM(Product_Quntity) FROM production WHERE Product_Type='Red Nadu 5Kg'");
-            ResultSet sum10kgRS = sum10kgST.executeQuery("SELECT SUM(Product_Quntity) FROM production WHERE Product_Type='Red Nadu 10Kg'");
-            ResultSet sum25kgRS = sum25kgST.executeQuery("SELECT SUM(Product_Quntity) FROM production WHERE Product_Type='Red Nadu 25Kg'");
-
-            while (sum5kgRS.next()) {
-                int c = sum5kgRS.getInt(1);
-                sum5kg = sum5kg + c;
-            }
-            while (sum10kgRS.next()){
-                int c1 = sum10kgRS.getInt(1);
-                sum10kg = sum10kg + c1;
-            }
-            while (sum25kgRS.next()){
-                int c1 = sum25kgRS.getInt(1);
-                sum25kg = sum25kg + c1;
-            }
-            RedNadu5KgC.setText(String.valueOf(sum5kg));
-            RedNadu10KgC.setText(String.valueOf(sum10kg));
-            RedNadu25KgC.setText(String.valueOf(sum25kg));
-        }
+        RedNadu5KgC.setText(String.valueOf(dashboardDAO.getRedNaduSum5kg()));
+        RedNadu10KgC.setText(String.valueOf(dashboardDAO.getRedNaduSum10kg()));
+        RedNadu25KgC.setText(String.valueOf(dashboardDAO.getRedNaduSum25kg()));
     }
 
     //-----------------------------------Paddy-----------------------------------
 
     void getPaddyQuntityColSum() throws SQLException {
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            int sum=0;
-            Statement st = con.createStatement();
-            ResultSet resultSet = st.executeQuery("SELECT SUM(Paddy_Quntity) FROM stock");
-
-            while (resultSet.next()){
-                int c = resultSet.getInt(1);
-                sum=sum+c;
-            }
-            lblPaddyStockCount.setText(String.valueOf(sum)+" Kg");
-        }
+        lblPaddyStockCount.setText(dashboardDAO.getPaddyQuntityColSum()+" Kg");
     }
 
     void getPaddySambaQuntityColSum() throws SQLException {
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            int sum=0;
-            Statement st = con.createStatement();
-            ResultSet resultSet = st.executeQuery("SELECT SUM(Paddy_Quntity) FROM stock WHERE Paddy_Type='Samba'");
-
-            while (resultSet.next()){
-                int c = resultSet.getInt(1);
-                sum=sum+c;
-            }
-            lblProductSambaCount.setText(String.valueOf(sum));
-        }
+        lblProductSambaCount.setText(String.valueOf(dashboardDAO.getPaddySambaQuntityColSum()));
     }
 
     void getPaddyNaduQuntityColSum() throws SQLException {
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            int sum=0;
-            Statement st = con.createStatement();
-            ResultSet resultSet = st.executeQuery("SELECT SUM(Paddy_Quntity) FROM stock WHERE Paddy_Type='Nadu'");
-
-            while (resultSet.next()){
-                int c = resultSet.getInt(1);
-                sum=sum+c;
-            }
-            lblProductNaduCount.setText(String.valueOf(sum));
-        }
+        lblProductNaduCount.setText(String.valueOf(dashboardDAO.getPaddyNaduQuntityColSum()));
     }
 
     void getPaddyRedNaduQuntityColSum() throws SQLException {
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            int sum=0;
-            Statement st = con.createStatement();
-            ResultSet resultSet = st.executeQuery("SELECT SUM(Paddy_Quntity) FROM stock WHERE Paddy_Type='Red Nadu'");
-
-            while (resultSet.next()){
-                int c = resultSet.getInt(1);
-                sum=sum+c;
-            }
-            lblProductRedNaduCount.setText(String.valueOf(sum));
-        }
+        lblProductRedNaduCount.setText(String.valueOf(dashboardDAO.getPaddyRedNaduQuntityColSum()));
     }
 
     void getPaddyWhiteRawQuntityColSum() throws SQLException {
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            int sum=0;
-            Statement st = con.createStatement();
-            ResultSet resultSet = st.executeQuery("SELECT SUM(Paddy_Quntity) FROM stock WHERE Paddy_Type='White Raw Rice'");
-
-            while (resultSet.next()){
-                int c = resultSet.getInt(1);
-                sum=sum+c;
-            }
-            lblProductWhiteRawCount.setText(String.valueOf(sum));
-        }
+        lblProductWhiteRawCount.setText(String.valueOf(dashboardDAO.getPaddyWhiteRawQuntityColSum()));
     }
 
     void getPaddyKeerisambaQuntityColSum() throws SQLException {
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            int sum=0;
-            Statement st = con.createStatement();
-            ResultSet resultSet = st.executeQuery("SELECT SUM(Paddy_Quntity) FROM stock WHERE Paddy_Type='Keerisamba'");
-
-            while (resultSet.next()){
-                int c = resultSet.getInt(1);
-                sum=sum+c;
-            }
-            lblProductKeerisambaCount.setText(String.valueOf(sum));
-        }
+        lblProductKeerisambaCount.setText(String.valueOf(dashboardDAO.getPaddyKeerisambaQuntityColSum()));
     }
 
     void getPaddyRedRowQuntityColSum() throws SQLException {
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            int sum=0;
-            Statement st = con.createStatement();
-            ResultSet resultSet = st.executeQuery("SELECT SUM(Paddy_Quntity) FROM stock WHERE Paddy_Type='Red Raw Rice'");
-
-            while (resultSet.next()){
-                int c = resultSet.getInt(1);
-                sum=sum+c;
-            }
-            lblProductRedRawCount.setText(String.valueOf(sum));
-        }
+        lblProductRedRawCount.setText(String.valueOf(dashboardDAO.getPaddyRedRowQuntityColSum()));
     }
 
     //-----------------------------------Product-----------------------------------
 
     void getProductQuntityColSum() throws SQLException {
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            int sum=0;
-            Statement st = con.createStatement();
-            ResultSet resultSet = st.executeQuery("SELECT SUM(Product_Quntity) FROM production");
-
-            while (resultSet.next()){
-                int c = resultSet.getInt(1);
-                sum=sum+c;
-            }
-            ProductC.setText(String.valueOf(sum));
-        }
+        ProductC.setText(String.valueOf(dashboardDAO.getProductQuntityColSum()));
     }
 
     public void OnMouseEntered(MouseEvent mouseEvent) {
@@ -749,23 +287,6 @@ public class DashboardFormController implements Initializable {
         lblProductRedRawKg.setStyle("-fx-text-fill: White");
     }
 
-    @FXML
-    void OnMouseEntered7(MouseEvent event) {
-        lblProduct5Kg.setStyle("-fx-text-fill: White");
-        lblProduct5KgCount.setStyle("-fx-text-fill: White");
-    }
-
-    @FXML
-    void OnMouseEntered8(MouseEvent event) {
-        lblProduct10Kg.setStyle("-fx-text-fill: White");
-        lblProduct10KgCount.setStyle("-fx-text-fill: White");
-    }
-
-    @FXML
-    void OnMouseEntered9(MouseEvent event) {
-        lblProduct25Kg.setStyle("-fx-text-fill: White");
-        lblProduct25KgCount.setStyle("-fx-text-fill: White");
-    }
 
     @FXML
     void OnMouseExited2(MouseEvent event) {
@@ -800,18 +321,6 @@ public class DashboardFormController implements Initializable {
         lblProductRedRaw.setStyle("-fx-text-fill: Black");
         lblProductRedRawCount.setStyle("-fx-text-fill: Black");
         lblProductRedRawKg.setStyle("-fx-text-fill: Black");
-    }
-
-    @FXML
-    void OnMouseExited7(MouseEvent event) {
-        lblProduct5Kg.setStyle("-fx-text-fill: Black");
-        lblProduct5KgCount.setStyle("-fx-text-fill: Black");
-    }
-
-    @FXML
-    void OnMouseExited8(MouseEvent event) {
-        lblProduct10Kg.setStyle("-fx-text-fill: Black");
-        lblProduct10KgCount.setStyle("-fx-text-fill: Black");
     }
 
     public void setLabe(String text) {

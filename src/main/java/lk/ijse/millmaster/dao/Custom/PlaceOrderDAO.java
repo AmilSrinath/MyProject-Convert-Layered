@@ -10,4 +10,5 @@ import java.util.List;
 public interface PlaceOrderDAO extends SuperDAO {
     public List<String> loadProductID() throws SQLException;
     public  ProductDTO searchById(String code) throws SQLException;
+    public double NetTotalCalculate(String id) throws SQLException;
 }

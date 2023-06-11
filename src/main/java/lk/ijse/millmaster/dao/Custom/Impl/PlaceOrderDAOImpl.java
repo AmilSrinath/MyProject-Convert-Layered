@@ -39,4 +39,15 @@ public class PlaceOrderDAOImpl implements PlaceOrderDAO {
         }
         return null;
     }
+
+    @Override
+    public double NetTotalCalculate(String id) throws SQLException {
+        double tot=0;
+        ResultSet affectedRows = SQLUtil.execute("SELECT SUM(Total) FROM order_product WHERE Order_ID=?",id);
+        while (affectedRows.next()){
+            double c = affectedRows.getInt(1);
+            tot=tot+c;
+        }
+        return tot;
+    }
 }
