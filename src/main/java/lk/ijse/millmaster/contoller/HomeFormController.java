@@ -23,6 +23,9 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import lk.ijse.millmaster.dao.Custom.HomeDAO;
+import lk.ijse.millmaster.dao.Custom.PaddyStorageDAO;
+import lk.ijse.millmaster.dao.DAOFactory;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
@@ -36,20 +39,10 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 public class HomeFormController implements Initializable {
-    private final static String URL = "jdbc:mysql://localhost:3306/Millmaster";
-    private final static Properties props = new Properties();
-
-    static{
-        props.setProperty("user", "root");
-        props.setProperty("password", "12345678");
-    }
-
     public ImageView btnClose;
-    public VBox DashBoardButtonVBox;
     public AnchorPane DashBoardSidBar;
     public VBox UserImageVBox;
     public VBox SearchBarVBox;
-    public VBox UserImageVBox1;
     public AnchorPane root2;
     public AnchorPane ManagePaddyStorageForm;
     public StackPane ControllArea;
@@ -83,6 +76,8 @@ public class HomeFormController implements Initializable {
     public Label lblMode;
     public VBox SearchBarVBox1;
 
+    HomeDAO homeDAO = (HomeDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.HOME);
+
     @SneakyThrows
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -110,17 +105,7 @@ public class HomeFormController implements Initializable {
     }
 
     void OrderActive() throws SQLException {
-        try (Connection con = DriverManager.getConnection(URL, props)) {
-            int sum=0;
-            Statement st = con.createStatement();
-            ResultSet resultSet = st.executeQuery("SELECT Count(Status)FROM orders WHERE Status='Active'");
-
-            while (resultSet.next()){
-                int c = resultSet.getInt(1);
-                sum=sum+c;
-            }
-            lblActiveOrders.setText(String.valueOf(sum));
-        }
+        lblActiveOrders.setText(String.valueOf(homeDAO.OrderActive()));
     }
 
     public void btnCloseOnMouseClicked(MouseEvent mouseEvent) {
